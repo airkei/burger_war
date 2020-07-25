@@ -2,8 +2,9 @@
 ```
 mkdir -p ~/catkin_ws/src/
 git clone https://github.com/airkei/burger_war.git ~/catkin_ws/src/
-docker build -t . --name burger_war
-docker run -p 6081:80 --shm-size=512m -v ~/catkin_ws/src/burger_war:/home/ubuntu/catkin_ws/src/burger_war burger_war
+cd ~/catkin_ws/src/burger_war
+docker build . -t burger_war
+docker run -p 6081:80 --shm-size=512m -v ${PWD}:/home/ubuntu/catkin_ws/src/burger_war burger_war
 ```
 
 ---
