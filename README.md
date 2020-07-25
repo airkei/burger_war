@@ -1,3 +1,14 @@
+# docker環境
+```
+mkdir -p ~/catkin_ws/src/
+git clone https://github.com/airkei/burger_war.git ~/catkin_ws/src/
+cd ~/catkin_ws/src/burger_war
+docker build . -t burger_war
+docker run -p 6081:80 --shm-size=512m -v ${PWD}:/home/ubuntu/catkin_ws/src/burger_war burger_war
+```
+
+---
+
 # burger_war
 ロボットで戦車対戦をするゲームです。
 大砲で撃つ代わりに、カメラでターゲットのARマーカーを読み取ります。<BR>
