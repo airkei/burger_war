@@ -65,6 +65,30 @@ RUN apt-get install -y python-pip; \
     apt-get install -y ros-kinetic-turtlebot3 ros-kinetic-turtlebot3-msgs ros-kinetic-turtlebot3-simulations; \
     apt-get install -y ros-kinetic-aruco-ros
 
+# Additional Packages
+# [MUST]DQN(Training)
+RUN pip install numpy==1.16.6 \
+                scipy==1.2.1 \
+                gym==0.16.0 \
+                Markdown==3.1.1 \
+                setuptools==44.1.1 \
+                grpcio==1.27.2 \
+                mock==3.0.5 \
+                gym==0.16.0 \
+                tensorflow==1.14.0 \
+                tensorflow-gpu==1.14.0 \
+                keras==2.3.0 \
+                flatten_json==0.1.7
+
+# [MUST]OpenCV apps
+RUN apt-get install -y ros-kinetic-opencv-apps
+
+# [DEBUG]Joystick
+RUN apt-get install -y ros-kinetic-joy  ros-kinetic-joystick-drivers
+
+# [DEBUG]Jupyter
+RUN pip install jupyter pandas
+
 # Clean Cache
 RUN apt-get clean; \
     rm -rf /var/lib/apt/lists/*

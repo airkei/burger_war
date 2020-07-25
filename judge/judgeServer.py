@@ -223,7 +223,7 @@ class Referee:
         self.war_state.scores['b'] = blue
         self.war_state.scores['r'] = red
 
-        return is_new 
+        return is_new
 
     def registPlayer(self, name):
         if self.war_state.players['r'] == "NoPlayer":
@@ -263,6 +263,16 @@ class Referee:
             f.write(result_string + "\n")
         app.logger.info("Write Result {}".format(result_string))
 
+# Only for debug
+    def teambt_initialize(self):
+        self.war_state.scores['r'] = 0
+        self.war_state.scores['b'] = 0
+        for target in self.war_state.targets:
+            target.player = "n"
+        self.war_state.passed_time = 0.
+        self.war_state.init_time = time.time()
+        self.war_state.stoped_time = 0.
+        self.setState("running")
 
 import argparse
 parser = argparse.ArgumentParser(description='burger_war judger server')
@@ -365,6 +375,16 @@ def getTest():
     app.logger.info("RESPONSE /test "+ str(ip) + str(res))
     return jsonify(res)
 
+
+# Only for debug
+@app.route('/teambt_initialize', methods=['GET'])
+def teambt_initialize():
+    ip = request.remote_addr
+    app.logger.info("GET /teambt_initialize " + str(ip))
+    ret = referee.teambt_initialize()
+    res = "teambt_initialize"
+    app.logger.info("RESPONSE /teambt_initialize " + str(ip) + str(res) + str(args.matchtime) + str(args.extendtime))
+    return jsonify(res)
 
 if __name__ == '__main__':
     now = datetime.datetime.now()
