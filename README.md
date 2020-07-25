@@ -6,7 +6,7 @@ cd ~/catkin_ws/src/burger_war
 docker build . -t burger_war
 docker run -p 6081:80 --shm-size=512m -v ${PWD}:/home/ubuntu/catkin_ws/src/burger_war burger_war
 ```
-
+we can access via http://127.0.0.1:6081/
 ---
 
 # burger_war
