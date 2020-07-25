@@ -32,7 +32,7 @@ RUN apt-get remove -y ros-kinetic-gazebo* libgazebo* gazebo*
 RUN sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
 RUN wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
 RUN apt-get update
-RUN apt-get install -y ros-kinetic-gazebo8-*
+RUN apt-get install -y ros-kinetic-gazebo8-* ros-kinetic-turtlebot3-description
 
 # Environment setting
 RUN rosdep init; \
