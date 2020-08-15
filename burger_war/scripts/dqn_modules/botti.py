@@ -99,6 +99,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         self.war_state_dict = {}
         self.war_state_dict_prev = {}
 
+        self.war_point = {}
         self.war_point['side1'] = 0
         self.war_point['side2'] = 0
         self.war_point['back'] = 0
@@ -132,7 +133,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         env_list = npscan.tolist()
 
         # AMCL(3)
-        normalization(min:0/max:1)
+        # normalization(min:0/max:1)
         pose_x = (self.pose_x + MAP_WIDTH_X/2) / MAP_WIDTH_X
         pose_y = (self.pose_y + MAP_WIDTH_Y/2) / MAP_WIDTH_Y
         th = (self.pose_y + PI) / (2 * PI) 
@@ -314,7 +315,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
             done = True
 
             # emergency recovery for test
-            for _ in range(3):
+            for _ in range(5):
                 vel_cmd.linear.x = -self.vel_max_x
                 vel_cmd.angular.z = 0
                 self.vel_pub.publish(vel_cmd)
