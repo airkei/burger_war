@@ -13,7 +13,7 @@ burger: #namespace
     discountFactor: 0.99
     memorySize: 1000000
 
-    updateTargetNetwork: 500
+    updateTargetNetwork: 5000
     learnStart: 64
     network_inputs: 194
     network_outputs: 10

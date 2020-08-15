@@ -115,10 +115,7 @@ class Train:
             prod = True
         env = gym.wrappers.Monitor(env, outdir, force=not prod, resume=prod)
 
-        if testMode == 'pretrain':
-            lastScores = [0]
-        else:
-            lastScores = [0] * save_interval
+        lastScores = [0] * save_interval
         lastScoresIndex = 0
         lastFilled = False
         stepCounter = 0
@@ -139,10 +136,7 @@ class Train:
                 # env.render()
                 qValues = deepQ.getQValues(observation)
 
-                if testMode == 'pretrain':
-                    action = env.manual_action()
-                else:
-                    action = deepQ.selectAction(qValues, explorationRate)
+                action = deepQ.selectAction(qValues, explorationRate)
 
                 newObservation, reward, done, info = env.step(action)
                 cumulated_reward += reward
@@ -160,7 +154,7 @@ class Train:
                 if done:
                     lastScores[lastScoresIndex] = episode_step
                     lastScoresIndex += 1
-                    if (testMode == 'pretrain') or (lastScoresIndex >= save_interval):
+                    if lastScoresIndex >= save_interval:
                         lastFilled = True
                         lastScoresIndex = 0
                     if not lastFilled:
@@ -170,7 +164,7 @@ class Train:
                         h, m = divmod(m, 60)
                         print ("EP " + str(epoch) + " - " + format(episode_step + 1) + " Episode steps - last Steps : " + str((sum(lastScores) / len(lastScores))) + " - Cumulated R: " + str(cumulated_reward) + "   Eps=" + str(round(explorationRate, 2)) + "     Time: %d:%02d:%02d" % (h, m, s))
 
-                        if (testMode == 'pretrain') or ((epoch % save_interval) == 0):
+                        if (epoch % save_interval) == 0:
                             #save model weights and monitoring data every save_interval epochs.
                             deepQ.saveModel(path+str(epoch)+'.h5')
                             env._flush()
