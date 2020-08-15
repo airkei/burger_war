@@ -315,11 +315,13 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
             done = True
 
             # emergency recovery for test
-            for _ in range(5):
+            for _ in range(8):
                 vel_cmd.linear.x = -self.vel_max_x
                 vel_cmd.angular.z = 0
                 self.vel_pub.publish(vel_cmd)
-                self.wait_for_topic('/scan')
+                data = self.wait_for_topic('/scan')
+                self.scan = data.ranges
+            state = self.scan_env()
 
         rospy.loginfo('action:' + str(action) + ', reward:' + str(reward))
 
