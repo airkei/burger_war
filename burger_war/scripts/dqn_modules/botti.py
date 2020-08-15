@@ -99,6 +99,10 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         self.war_state_dict = {}
         self.war_state_dict_prev = {}
 
+        self.war_point['side1'] = 0
+        self.war_point['side2'] = 0
+        self.war_point['back'] = 0
+
     def wait_for_topic(self, topic):
         data = None
         while data is None:
@@ -165,24 +169,28 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
             y = self.enemy_cam_pose_y / 480
             env_list.extend([self.enemy_cam_detect, x, y]) 
 
-            # War State(36)
+            # War State(3)
             war_state = {}
-            for i in range(0, 18):
-                # one-hot encoding
-                try:
-                    if self.war_state_dict['targets_{}_player'.format(i)] == 'r':
-                        war_state['targets_{}_r'.format(i)] = 1
-                        war_state['targets_{}_b'.format(i)] = 0
-                    elif self.war_state_dict['targets_{}_player'.format(i)] == 'b':
-                        war_state['targets_{}_r'.format(i)] = 0
-                        war_state['targets_{}_b'.format(i)] = 1
-                    else:
-                        war_state['targets_{}_r'.format(i)] = 0
-                        war_state['targets_{}_b'.format(i)] = 0
-                except:
-                    war_state['targets_{}_r'.format(i)] = 0
-                    war_state['targets_{}_b'.format(i)] = 0
-            env_list.extend(war_state.values())
+            # for i in range(0, 18):
+            #     # one-hot encoding
+            #     try:
+            #         if self.war_state_dict['targets_{}_player'.format(i)] == 'r':
+            #             war_state['targets_{}_r'.format(i)] = 1
+            #             war_state['targets_{}_b'.format(i)] = 0
+            #         elif self.war_state_dict['targets_{}_player'.format(i)] == 'b':
+            #             war_state['targets_{}_r'.format(i)] = 0
+            #             war_state['targets_{}_b'.format(i)] = 1
+            #         else:
+            #             war_state['targets_{}_r'.format(i)] = 0
+            #             war_state['targets_{}_b'.format(i)] = 0
+            #     except:
+            #         war_state['targets_{}_r'.format(i)] = 0
+            #         war_state['targets_{}_b'.format(i)] = 0
+            war_state[0] = self.war_point['side1']
+            war_state[1] = self.war_point['side2']
+            war_state[2] = self.war_point['back']
+
+            env_list.extend(war_state)
 
         return env_list
 
@@ -285,8 +293,17 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
         # point reward
         if not self.caMode: # production mode
-            if (self.war_state_dict['scores_r'] - self.prev_score) >= 3:
+            diff =  self.war_state_dict['scores_r'] - self.prev_score
+            if diff == 3:
+                if self.war_point['side1'] == 0:
+                    self.war_point['side1'] = 1
+                else:
+                    self.war_point['side2'] = 1
                 reward += (self.war_state_dict['scores_r'] - self.prev_score) * 100
+            elif diff == 5:
+                self.war_point['back'] = 1
+                reward += (self.war_state_dict['scores_r'] - self.prev_score) * 100
+
             self.prev_score = self.war_state_dict['scores_r']
 
         # check game end
