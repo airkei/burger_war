@@ -183,7 +183,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
                     war_state['targets_{}_r'.format(i)] = 0
                     war_state['targets_{}_b'.format(i)] = 0
 
-            env_list.extend(war_state)
+            env_list.extend(war_state.values())
 
         return env_list
 
