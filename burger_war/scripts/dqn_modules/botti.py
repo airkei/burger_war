@@ -300,10 +300,10 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
                     self.war_point['side1'] = 1
                 else:
                     self.war_point['side2'] = 1
-                reward += (self.war_state_dict['scores_r'] - self.prev_score) * 100
+                reward += diff * 100
             elif diff == 5:
                 self.war_point['back'] = 1
-                reward += (self.war_state_dict['scores_r'] - self.prev_score) * 100
+                reward += diff * 100
 
             self.prev_score = self.war_state_dict['scores_r']
 
