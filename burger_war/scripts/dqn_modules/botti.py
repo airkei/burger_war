@@ -295,14 +295,17 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         # point reward
         if not self.caMode: # production mode
             diff =  self.war_state_dict['scores_r'] - self.prev_score
-            if diff == 3:
-                if self.war_point['side1'] == 0:
+            if diff > 1:
+                if (diff % 3) == 0:
+                    if self.war_point['side1'] == 0:
+                        self.war_point['side1'] = 1
+                    else:
+                        self.war_point['side2'] = 1
+                if (diff % 5) == 0:
+                    self.war_point['back'] = 1
+                if (diff % 6) == 0:
                     self.war_point['side1'] = 1
-                else:
                     self.war_point['side2'] = 1
-                reward += diff * 100
-            elif diff == 5:
-                self.war_point['back'] = 1
                 reward += diff * 100
 
             self.prev_score = self.war_state_dict['scores_r']
