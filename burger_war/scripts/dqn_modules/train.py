@@ -27,10 +27,6 @@ class Train:
         task_and_robot_environment_name = rospy.get_param("/burger/task_and_robot_environment_name")
         env = gym.make(task_and_robot_environment_name)
 
-#        model_dir = rospy.get_param("/burger/ros_ws_abspath")
-#        outdir = model_dir + '/src/burger_war/model/gazebo_gym_experiments/'
-#        path = model_dir + '/src/burger_war/model/burger_war_dqn_ep'
-
         filepath = os.path.dirname(os.path.abspath(__file__))
         outdir = filepath + '/model/gazebo_gym_experiments/'
         path = filepath + '/model/burger_war_dqn_ep'
@@ -157,11 +153,11 @@ class Train:
                     if lastScoresIndex >= save_interval:
                         lastFilled = True
                         lastScoresIndex = 0
+                    m, s = divmod(int(time.time() - start_time), 60)
+                    h, m = divmod(m, 60)
                     if not lastFilled:
                         print ("EP " + str(epoch) + " - " + format(episode_step + 1) + " Episode steps   Exploration=" + str(round(explorationRate, 2)))
                     else :
-                        m, s = divmod(int(time.time() - start_time), 60)
-                        h, m = divmod(m, 60)
                         print ("EP " + str(epoch) + " - " + format(episode_step + 1) + " Episode steps - last Steps : " + str((sum(lastScores) / len(lastScores))) + " - Cumulated R: " + str(cumulated_reward) + "   Eps=" + str(round(explorationRate, 2)) + "     Time: %d:%02d:%02d" % (h, m, s))
 
                         if (epoch % save_interval) == 0:
@@ -177,7 +173,7 @@ class Train:
                                 json.dump(parameter_dictionary, outfile)
 
                     with open(resultpath, mode='a') as f:
-                        f.write(str(epoch) + "," + format(episode_step + 1) + "," + str(cumulated_reward) + "," + str(round(explorationRate, 2)) + "\n")
+                        f.write(str(epoch) + "," + format(episode_step + 1) + "," + str(cumulated_reward) + "," + str(round(explorationRate, 2)) + "," + "%d:%02d:%02d" % (h, m, s)"\n")
 
                 stepCounter += 1
                 if stepCounter % updateTargetNetwork == 0:

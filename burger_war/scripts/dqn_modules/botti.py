@@ -111,7 +111,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
     def scan_env(self):
         env_list = []
 
-        # Lidar(181)
+        # Lidar(181) -90 to 90 degree
         # scan = self.scan
         first = np.array(self.scan[1:91])
         last = np.array(self.scan[270:360])
