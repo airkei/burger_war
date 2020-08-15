@@ -173,7 +173,7 @@ class Train:
                                 json.dump(parameter_dictionary, outfile)
 
                     with open(resultpath, mode='a') as f:
-                        f.write(str(epoch) + "," + format(episode_step + 1) + "," + str(cumulated_reward) + "," + str(round(explorationRate, 2)) + "," + "%d:%02d:%02d" % (h, m, s)"\n")
+                        f.write(str(epoch) + "," + format(episode_step + 1) + "," + str(cumulated_reward) + "," + str(round(explorationRate, 2)) + "," + "%d:%02d:%02d" % (h, m, s) + "\n")
 
                 stepCounter += 1
                 if stepCounter % updateTargetNetwork == 0:
