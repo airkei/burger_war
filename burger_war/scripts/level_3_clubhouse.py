@@ -297,6 +297,7 @@ class TeriyakiBurger():
         r = rospy.Rate(10) # change speed 10fps
 
         while not rospy.is_shutdown():
+
             try:
                 # publish twist topic
                 twist = Twist()
