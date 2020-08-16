@@ -165,25 +165,18 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
             y = self.enemy_cam_pose_y / 480
             env_list.extend([self.enemy_cam_detect, x, y]) 
 
-            # War State(36)
-            # war_state = [0] * 36
-            # for i in range(0, 18):
-            #     # one-hot encoding
-            #     try:
-            #         if self.war_state_dict['targets_{}_player'.format(i)] == 'r':
-            #             war_state[i] = 1
-            #             war_state[i+1] = 0
-            #         elif self.war_state_dict['targets_{}_player'.format(i)] == 'b':
-            #             war_state[i] = 0
-            #             war_state[i+1] = 1
-            #         else:
-            #             war_state[i] = 0
-            #             war_state[i+1] = 0
-            #     except:
-            #         war_state[i] = 0
-            #         war_state[i+1] = 0
-
-            # env_list.extend(war_state)
+            # War State(18)
+            war_state = [0] * 18
+            for i in range(0, 18):
+                # one-hot encoding
+                try:
+                    if self.war_state_dict['targets_{}_player'.format(i)] == 'r':
+                        war_state[i] = 1
+                    else:
+                        war_state[i] = 0
+                except:
+                    war_state[i] = 0
+            env_list.extend(war_state)
 
         return env_list
 
@@ -278,7 +271,8 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
             reward -= 5
         else:
             self.collision_cnt = 0
-            reward += 30 * abs(vel_cmd.linear.x)
+            reward += 15 * abs(vel_cmd.linear.x)
+            reward += round(4 * (self.vel_max_z - abs(ang_vel)), 2)
 
             # map reward
             if (-0.5 <= self.pose_x <= 0.5) and (-0.5 <= self.pose_y <= 0.5):
