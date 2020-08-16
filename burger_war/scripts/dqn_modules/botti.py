@@ -166,24 +166,24 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
             env_list.extend([self.enemy_cam_detect, x, y]) 
 
             # War State(36)
-            war_state = {}
+            war_state = [0] * 36
             for i in range(0, 18):
                 # one-hot encoding
                 try:
                     if self.war_state_dict['targets_{}_player'.format(i)] == 'r':
-                        war_state['targets_{}_r'.format(i)] = 1
-                        war_state['targets_{}_b'.format(i)] = 0
+                        war_state[i] = 1
+                        war_state[i+1] = 0
                     elif self.war_state_dict['targets_{}_player'.format(i)] == 'b':
-                        war_state['targets_{}_r'.format(i)] = 0
-                        war_state['targets_{}_b'.format(i)] = 1
+                        war_state[i] = 0
+                        war_state[i+1] = 1
                     else:
-                        war_state['targets_{}_r'.format(i)] = 0
-                        war_state['targets_{}_b'.format(i)] = 0
+                        war_state[i] = 0
+                        war_state[i+1] = 0
                 except:
-                    war_state['targets_{}_r'.format(i)] = 0
-                    war_state['targets_{}_b'.format(i)] = 0
+                    war_state[i] = 0
+                    war_state[i+1] = 0
 
-            env_list.extend(war_state.values())
+            env_list.extend(war_state)
 
         return env_list
 
