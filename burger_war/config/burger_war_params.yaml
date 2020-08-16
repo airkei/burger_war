@@ -2,7 +2,7 @@ burger: #namespace
     task_and_robot_environment_name: 'BurgerWarWorld-v0'
 
     #dqn parameters
-    resume_epoch: "0"
+    resume_epoch: "999"
 
     save_interval: 1
     epochs: 1000
@@ -15,11 +15,11 @@ burger: #namespace
 
     updateTargetNetwork: 10000
     learnStart: 64
-    network_inputs: 209
+    network_inputs: 184
     network_outputs: 10
-    network_structure: [209,209]
+    network_structure: [184,184]
 
-    epsilon_decay: 0.996
+    epsilon_decay: 0.995
 
     # maximum velocity
     vel_max_x: 0.22

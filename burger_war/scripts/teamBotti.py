@@ -16,5 +16,5 @@ if __name__ == '__main__':
     # dqntrain.start(testMode='test', caMode=True) # For test
 
     # For Production
-    dqntrain.start(testMode='train', caMode=False) # For training
-    # dqntrain.start(testMode='test', caMode=False) # For test
+    # dqntrain.start(testMode='train', caMode=False) # For training
+    dqntrain.start(testMode='test', caMode=False) # For test
