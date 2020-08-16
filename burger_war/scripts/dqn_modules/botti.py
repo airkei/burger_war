@@ -297,7 +297,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
             done = True
 
             # emergency recovery
-            for _ in range(8):
+            for _ in range(15):
                 vel_cmd.linear.x = -self.vel_max_x
                 vel_cmd.angular.z = 0
                 self.vel_pub.publish(vel_cmd)
