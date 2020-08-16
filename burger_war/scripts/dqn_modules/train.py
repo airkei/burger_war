@@ -107,6 +107,8 @@ class Train:
             deepQ.loadWeights(weights_path)
 
             self.clear_monitor_files(outdir)
+            if not os.path.exists(monitor_path):
+                os.makedirs(monitor_path)
             copy_tree(monitor_path,outdir)
 
         env._max_episode_steps = steps # env returns done after _max_episode_steps
