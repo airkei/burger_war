@@ -141,7 +141,7 @@ class Train:
 
                 deepQ.addMemory(observation, action, reward, newObservation, done)
 
-                if stepCounter >= learnStart:
+                if ((testMode != 'test') and (stepCounter >= learnStart)):
                     if stepCounter <= updateTargetNetwork:
                         deepQ.learnOnMiniBatch(minibatch_size, False)
                     else :
