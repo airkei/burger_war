@@ -297,28 +297,24 @@ class TeriyakiBurger():
         r = rospy.Rate(10) # change speed 10fps
 
         while not rospy.is_shutdown():
+            # publish twist topic
+            twist = Twist()
+            if self.is_near_enemy:
+                twist.linear.x = self.near_enemy_twist.linear.x
+                twist.angular.z = self.near_enemy_twist.angular.z
+            else:
+                twist.linear.x = self.pose_twist.linear.x
+                twist.angular.z = self.pose_twist.angular.z
 
-            try:
-                # publish twist topic
-                twist = Twist()
-                if self.is_near_enemy:
-                    twist.linear.x = self.near_enemy_twist.linear.x
-                    twist.angular.z = self.near_enemy_twist.angular.z
-                else:
-                    twist.linear.x = self.pose_twist.linear.x
-                    twist.angular.z = self.pose_twist.angular.z
+            if self.is_near_wall:
+                twist.linear.x = -self.speed / 2 
+            self.vel_pub.publish(twist)
+            # for debug
+            print("POSE TWIST: {}, {}".format(self.pose_twist.linear.x, self.pose_twist.angular.z))
+            print("ENEMY TWIST: {}, {}".format(self.near_enemy_twist.linear.x, self.near_enemy_twist.angular.z))
+            print("wall: {}, Enemy: {}, X: {}, Z: {}".format(self.is_near_wall, self.is_near_enemy, twist.linear.x, twist.angular.z))
 
-                if self.is_near_wall:
-                    twist.linear.x = -self.speed / 2 
-                self.vel_pub.publish(twist)
-                # for debug
-                print("POSE TWIST: {}, {}".format(self.pose_twist.linear.x, self.pose_twist.angular.z))
-                print("ENEMY TWIST: {}, {}".format(self.near_enemy_twist.linear.x, self.near_enemy_twist.angular.z))
-                print("wall: {}, Enemy: {}, X: {}, Z: {}".format(self.is_near_wall, self.is_near_enemy, twist.linear.x, twist.angular.z))
-
-                r.sleep()
-            except:
-                pass
+            r.sleep()
 
 
 if __name__ == '__main__':

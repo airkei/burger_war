@@ -92,18 +92,15 @@ class CheeseBurger():
         r = rospy.Rate(5) # change speed 1fps
 
         while not rospy.is_shutdown():
-            try:
-                # update state from now state and wheel rotation
-                self.calcState()
-                # update twist
-                twist = self.calcTwist()
+            # update state from now state and wheel rotation
+            self.calcState()
+            # update twist
+            twist = self.calcTwist()
 
-                # publish twist topic
-                self.vel_pub.publish(twist)
+            # publish twist topic
+            self.vel_pub.publish(twist)
 
-                r.sleep()
-            except:
-                pass
+            r.sleep()
 
 
 if __name__ == '__main__':
