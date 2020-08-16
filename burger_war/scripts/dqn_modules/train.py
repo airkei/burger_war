@@ -168,7 +168,7 @@ class Train:
                             env._flush()
                             copy_tree(outdir,path+str(epoch))
                             #save simulation parameters.
-                            parameter_keys = ['save_interval', 'epochs','steps','updateTargetNetwork','explorationRate','minibatch_size','learnStart','learningRate','discountFactor','memorySize','network_inputs','network_outputs','network_structure','current_epoch',epsilon_decay,'vel_max_x','vel_min_x','vel_max_z']
+                            parameter_keys = ['save_interval', 'epochs','steps','updateTargetNetwork','explorationRate','minibatch_size','learnStart','learningRate','discountFactor','memorySize','network_inputs','network_outputs','network_structure','current_epoch','epsilon_decay','vel_max_x','vel_min_x','vel_max_z']
                             parameter_values = [save_interval, epochs, steps, updateTargetNetwork, explorationRate, minibatch_size, learnStart, learningRate, discountFactor, memorySize, network_inputs, network_outputs, network_structure, epoch, epsilon_decay, vel_max_x, vel_min_x, vel_max_z]
                             parameter_dictionary = dict(zip(parameter_keys, parameter_values))
                             with open(path+str(epoch)+'.json', 'w') as outfile:

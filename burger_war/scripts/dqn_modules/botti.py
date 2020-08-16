@@ -280,7 +280,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
         # point reward
         if not self.caMode: # production mode
-            reward += (self.war_state_dict['scores_r'] - self.prev_score) * 10
+            reward += (self.war_state_dict['scores_r'] - self.prev_score) * 5
             self.prev_score = self.war_state_dict['scores_r']
 
         # check game end
