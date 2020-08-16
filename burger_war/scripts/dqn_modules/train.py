@@ -34,7 +34,7 @@ class Train:
         dt_now = datetime.datetime.now()
         resultpath = filepath + '/model/' + dt_now.strftime('%Y-%m-%d-%H:%M:%S') + '.csv'
 
-        resume_epoch = rospy.get_param("/burger/current_epoch") # change to epoch to continue from
+        resume_epoch = rospy.get_param("/burger/resume_epoch") # change to epoch to continue from
         resume_path = path + resume_epoch
         weights_path = resume_path + '.h5'
         monitor_path = resume_path
