@@ -78,10 +78,10 @@
     <node pkg="burger_war" type="teamBotti.py" name="teamBotti" output="screen"/>
 
     <!-- rviz -->
-    <group if="$(arg open_rviz)"> 
-      <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find burger_navigation)/rviz/your_navigation.rviz">
-      </node>
-    </group>
+    <!-- <group if="$(arg open_rviz)"> -->
+    <!--   <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find burger_navigation)/rviz/your_navigation.rviz"> -->
+    <!--   </node> -->
+    <!-- </group> -->
 
     <!-- End of your space  -->
 </launch>
