@@ -91,11 +91,15 @@ class Train:
                 network_structure = d.get('network_structure')
                 current_epoch = d.get('current_epoch')
 
-                epsilon_decay = d.get('epsilon_decay')
+#                epsilon_decay = d.get('epsilon_decay')
+                epsilon_decay = 0.995
 
-                vel_max_x = d.get('vel_max_x')
-                vel_min_x = d.get('vel_min_x')
-                vel_max_z = d.get('vel_max_z')
+#                vel_max_x = d.get('vel_max_x')
+                vel_max_x = 0.22
+#                vel_min_x = d.get('vel_min_x')
+                vel_min_x = 0.11
+#                vel_max_z = d.get('vel_max_z')
+                vel_max_z = 0.785398
 
             deepQ = deepq.DeepQ(network_inputs, network_outputs, memorySize, discountFactor, learningRate, learnStart)
             deepQ.initNetworks(network_structure)
