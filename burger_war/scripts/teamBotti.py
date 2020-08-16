@@ -13,8 +13,8 @@ if __name__ == '__main__':
 
     # Only for collision avoidance
     # dqntrain.start(testMode='train', caMode=True) # For training
-    # dqntrain.start(testMode='test', caMode=True) # For test
+    dqntrain.start(testMode='test', caMode=True) # For test
 
     # For Production
     # dqntrain.start(testMode='train', caMode=False) # For training
-    dqntrain.start(testMode='test', caMode=False) # For test
+    # dqntrain.start(testMode='test', caMode=False) # For test

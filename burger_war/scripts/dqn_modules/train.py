@@ -102,6 +102,8 @@ class Train:
 
             deepQ.loadWeights(weights_path)
 
+            if not os.path.exists(outdir):
+                os.makedirs(outdir)
             self.clear_monitor_files(outdir)
             if not os.path.exists(monitor_path):
                 os.makedirs(monitor_path)
