@@ -113,12 +113,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         return data, done
 
     def rounding(self, val):
-        # x10
-        data = int(val * 10)
-        # rounding( % 5)
-        data -= data % 5
-        # rounding(* 2 / 10)
-        data = (data * 2) / 10
+        data = int((val * 2) // 10)
 
         return data
 
