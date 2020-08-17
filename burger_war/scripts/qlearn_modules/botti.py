@@ -13,6 +13,7 @@ from std_msgs.msg import String
 from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Twist
 from geometry_msgs.msg import PoseWithCovarianceStamped
+from opencv_apps.msg import CircleArrayStamped
 
 import gazebo_env
 
@@ -26,8 +27,11 @@ from enemy_detector import ed
 
 
 # Lidar
-LIDAR_MAX_RANGE = 3.5
+LIDAR_MAX_RANGE = 4
 LIDAR_COLLISION_RANGE = 0.12
+
+# For Enemy Camera Detection
+ENEMY_CAM_THRESHOLD_Y = 280
 
 # ACTION
 ACTION_FORWARD = 0
@@ -47,18 +51,22 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         self.enemy_detector = ed.EnemyDetector()
         # Lidar callback
         rospy.Subscriber('scan', LaserScan, self.lidar_callback)
+        # AMCL callback
+        rospy.Subscriber('amcl_pose', PoseWithCovarianceStamped, self.pose_callback)
+        # Camera
+        rospy.Subscriber('hough_circles/circles', CircleArrayStamped, self.camera_callback)
         # WarState callback
         rospy.Subscriber('war_state', String, self.war_state_callback)
 
     # Mode Setting
-    def set_mode(self, testMode, caMode, vel_max_x, vel_min_x, vel_max_z, ranges_degree):
+    def set_mode(self, testMode, caMode, vel_max_x, vel_min_x, vel_max_z, scan_points):
         self.testMode = testMode
         self.caMode = caMode
 
         self.vel_max_x = vel_max_x
         self.vel_min_x = vel_min_x
         self.vel_max_z = vel_max_z
-        self.ranges_degree = ranges_degree
+        self.scan_points = scan_points
 
     # Reset
     def var_reset(self):
@@ -74,6 +82,14 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         self.enemy_point = 0
         # Lidar callback
         self.scan = []
+        # AMCL callback
+        self.pose_x = 0
+        self.pose_y = 0
+        self.th = 0
+        # Camera
+        self.enemy_cam_detect = 0
+        self.enemy_cam_pose_x = 0
+        self.enemy_cam_pose_y = 0
         # WarState callback
         self.war_state = String()
         self.war_state_dict = {}
@@ -100,7 +116,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         discretized_ranges = []
         min_range = LIDAR_COLLISION_RANGE
         done = False
-        mod = len(data.ranges) / self.ranges_degree
+        mod = len(data.ranges) / self.scan_points
         for i, item in enumerate(data.ranges):
             if (i % mod == 0):
                 if data.ranges[i] == float ('Inf') or np.isinf(data.ranges[i]):
@@ -182,7 +198,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
         # scan
         data = self.wait_for_topic('/scan')
-        self.scan, collision = discretize_observation(data)
+        self.scan, collision = self.discretize_observation(data)
 
         # vel/collistion reward
         reward = 0
@@ -209,21 +225,21 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
                 vel_cmd.angular.z = 0
                 self.vel_pub.publish(vel_cmd)
                 data = self.wait_for_topic('/scan')
-            self.scan, _ = discretize_observation(data)
+            self.scan, _ = self.discretize_observation(data)
 
         rospy.loginfo('action:' + str(action) + ', reward:' + str(reward))
 
         if self.testMode == 'test':
             done = False
 
-        return np.asarray(state), reward, done, {}
+        return self.scan, reward, done, {}
 
     def reset(self):
         if self.testMode == 'test':
             self.var_reset()
 
             data = self.wait_for_topic('/scan')
-            self.scan = data.ranges
+            self.scan, _ = self.discretize_observation(data)
             self.wait_for_topic('/war_state')
         else:
             for _ in range(2):        
@@ -250,8 +266,8 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
                 self.var_reset()
 
                 data = self.wait_for_topic('/scan')
-                self.scan, _ = discretize_observation(data)
+                self.scan, _ = self.discretize_observation(data)
                 self.wait_for_topic('/war_state')
 
-        return np.asarray(self.scan)
+        return self.scan
 ### Gym Functions ###

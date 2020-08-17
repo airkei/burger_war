@@ -2,19 +2,19 @@ burger: #namespace
     task_and_robot_environment_name: 'BurgerWarWorld-v0'
 
     #dqn parameters
-    resume_epoch: "0"
+    resume_epoch: "6"
 
     save_interval: 1
-    epochs: 1000
+    epochs: 10000
     steps: 1000
-    alpha: 1
-    gamma: 64
-    epsilon: 0.00025
-    epsilon_discount: 1000000
-
-    epsilon_decay: 0.995
+    alpha: 0.2
+    gamma: 0.8
+    epsilon: 0.9
+    epsilon_discount: 0.9986
+    scan_points: 5
+    actions: [0,1,2]
 
     # maximum velocity
     vel_max_x: 0.22
-    vel_min_x: 0.11
+    vel_min_x: 0.15
     vel_max_z: 0.785398

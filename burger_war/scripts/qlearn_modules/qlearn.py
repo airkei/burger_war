@@ -1,49 +1,65 @@
+import csv
+import json
 import random
-import numpy as np
 
-class Memory:
-    """
-    This class provides an abstraction to store the [s, a, r, a'] elements of each iteration.
-    Instead of using tuples (as other implementations do), the information is stored in lists 
-    that get returned as another list of dictionaries with each key corresponding to either 
-    "state", "action", "reward", "nextState" or "isFinal".
-    """
-    def __init__(self, size):
-        self.size = size
-        self.currentPosition = 0
-        self.states = []
-        self.actions = []
-        self.rewards = []
-        self.newStates = []
-        self.finals = []
+class QLearn:
+    def __init__(self, actions, epsilon, alpha, gamma):
+        self.q = {}
+        self.epsilon = epsilon  # exploration constant
+        self.alpha = alpha      # discount constant
+        self.gamma = gamma      # discount factor
+        self.actions = actions
 
-    def getMiniBatch(self, size) :
-        indices = random.sample(np.arange(len(self.states)), min(size,len(self.states)) )
-        miniBatch = []
-        for index in indices:
-            miniBatch.append({'state': self.states[index],'action': self.actions[index], 'reward': self.rewards[index], 'newState': self.newStates[index], 'isFinal': self.finals[index]})
-        return miniBatch
+    def getQ(self, state, action):
+        return self.q.get((state, action), 0.0)
 
-    def getCurrentSize(self) :
-        return len(self.states)
+    def learnQ(self, state, action, reward, value):
+        '''
+        Q-learning:
+            Q(s, a) += alpha * (reward(s,a) + max(Q(s') - Q(s,a))            
+        '''
+        oldv = self.q.get((state, action), None)
+        if oldv is None:
+            self.q[(state, action)] = reward
+        else:
+            self.q[(state, action)] = oldv + self.alpha * (value - oldv)
 
-    def getMemory(self, index): 
-        return {'state': self.states[index],'action': self.actions[index], 'reward': self.rewards[index], 'newState': self.newStates[index], 'isFinal': self.finals[index]}
+    def chooseAction(self, state, return_q=False):
+        q = [self.getQ(state, a) for a in self.actions]
+        maxQ = max(q)
 
-    def addMemory(self, state, action, reward, newState, isFinal) :
-        if (self.currentPosition >= self.size - 1) :
-            self.currentPosition = 0
-        if (len(self.states) > self.size) :
-            self.states[self.currentPosition] = state
-            self.actions[self.currentPosition] = action
-            self.rewards[self.currentPosition] = reward
-            self.newStates[self.currentPosition] = newState
-            self.finals[self.currentPosition] = isFinal
-        else :
-            self.states.append(state)
-            self.actions.append(action)
-            self.rewards.append(reward)
-            self.newStates.append(newState)
-            self.finals.append(isFinal)
-        
-        self.currentPosition += 1
+        if random.random() < self.epsilon:
+            minQ = min(q); mag = max(abs(minQ), abs(maxQ))
+            # add random values to all the actions, recalculate maxQ
+            q = [q[i] + random.random() * mag - .5 * mag for i in range(len(self.actions))] 
+            maxQ = max(q)
+
+        count = q.count(maxQ)
+        # In case there're several state-action max values 
+        # we select a random one among them
+        if count > 1:
+            best = [i for i in range(len(self.actions)) if q[i] == maxQ]
+            i = random.choice(best)
+        else:
+            i = q.index(maxQ)
+
+        action = self.actions[i]        
+        if return_q: # if they want it, give it!
+            return action, q
+        return action
+
+    def learn(self, state1, action1, reward, state2):
+        maxqnew = max([self.getQ(state2, a) for a in self.actions])
+        self.learnQ(state1, action1, reward, reward + self.gamma*maxqnew)
+
+    def saveModel(self, path):
+        with open(path, 'w') as f:
+            writer = csv.writer(f)
+            for k, v in self.q.items():
+                writer.writerow([k[0], k[1], v])
+
+    def loadWeights(self, path):
+        with open(path, 'r') as f:
+            reader = csv.reader(f)
+            for row in reader:
+                self.q[(row[0], row[1])] = row[2]
