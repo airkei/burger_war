@@ -68,11 +68,11 @@
     <!-- <node pkg="joy" type="joy_node" name="joy_node"/> -->
 
     <!-- opencv app for circle detection -->
-    <node pkg="opencv_apps" type="hough_circles" name="hough_circles">
-        <param name="use_camera_info" value="false"/>
-        <param name="debug_view" value="false"/>
-        <remap from="/image" to="image_raw" />
-    </node>
+    <!-- <node pkg="opencv_apps" type="hough_circles" name="hough_circles"> -->
+    <!--     <param name="use_camera_info" value="false"/> -->
+    <!--     <param name="debug_view" value="false"/> -->
+    <!--     <remap from="/image" to="image_raw" /> -->
+    <!-- </node> -->
 
     <!-- botti -->
     <node pkg="burger_war" type="teamBotti.py" name="teamBotti" output="screen"/>
