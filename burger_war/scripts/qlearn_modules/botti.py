@@ -116,16 +116,25 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         discretized_ranges = []
         min_range = LIDAR_COLLISION_RANGE
         done = False
-        mod = len(data.ranges) / self.scan_points
-        for i, item in enumerate(data.ranges):
-            if (i % mod == 0):
-                if data.ranges[i] == float ('Inf') or np.isinf(data.ranges[i]):
-                    discretized_ranges.append(LIDAR_MAX_RANGE)
-                elif np.isnan(data.ranges[i]):
-                    discretized_ranges.append(0)
-                else:
-                    discretized_ranges.append(int(data.ranges[i]))
-            if (min_range > data.ranges[i] > 0):
+
+        points = []
+        for i in range(self.scan_points//2):
+            points.append(data.ranges[-90/(i+1)])
+
+        if (self.scan_points % 2) != 0:
+            points.append(data.ranges[0])
+            
+        for i in range(self.scan_points//2):
+            points.append(data.ranges[90/(self.scan_points//2) * (i+1)])
+
+        for point in points:
+            if point == float('Inf') or np.isinf(point):
+                discretized_ranges.append(LIDAR_MAX_RANGE)
+            elif np.isnan(point):
+                discretized_ranges.append(0)
+            else:
+                discretized_ranges.append(int(point))
+            if (min_range > point > 0):
                 done = True
         return discretized_ranges, done
 
