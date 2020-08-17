@@ -129,12 +129,12 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
         for i, item in enumerate(data.ranges):
             if i in points:
-                if point == float('Inf') or np.isinf(point):
+                if data.ranges[i] == float ('Inf') or np.isinf(data.ranges[i]):
                     discretized_ranges.append(LIDAR_MAX_RANGE)
-                elif np.isnan(point):
+                elif np.isnan(data.ranges[i]):
                     discretized_ranges.append(0)
                 else:
-                    discretized_ranges.append(int(point))
+                    discretized_ranges.append(int(data.ranges[i]))
             if (min_range > data.ranges[i] > 0):
                 done = True
         return discretized_ranges, done
