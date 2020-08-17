@@ -27,7 +27,7 @@ from enemy_detector import ed
 
 
 # Lidar
-LIDAR_MAX_RANGE = 4
+LIDAR_MAX_RANGE = 3.5
 LIDAR_COLLISION_RANGE = 0.12
 
 # For Enemy Camera Detection
@@ -112,6 +112,16 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
                 done = True
         return data, done
 
+    def rounding(self, val):
+        # x10
+        data = int(val * 10)
+        # rounding( % 5)
+        data -= data % 5
+        # rounding(* 2 / 10)
+        data = (data * 2) / 10
+
+        return data
+
     def discretize_observation(self, data):
         discretized_ranges = []
         min_range = LIDAR_COLLISION_RANGE
@@ -130,11 +140,11 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         for i, item in enumerate(data.ranges):
             if i in points:
                 if data.ranges[i] == float ('Inf') or np.isinf(data.ranges[i]):
-                    discretized_ranges.append(LIDAR_MAX_RANGE)
+                    discretized_ranges.append(self.rounding(LIDAR_MAX_RANGE))
                 elif np.isnan(data.ranges[i]):
                     discretized_ranges.append(0)
                 else:
-                    discretized_ranges.append(int(data.ranges[i]))
+                    discretized_ranges.append(self.rounding(data.ranges[i]))
             if (min_range > data.ranges[i] > 0):
                 done = True
         return discretized_ranges, done
@@ -224,7 +234,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
         # check game end
         done = self.is_game_timeout() or self.is_game_called()
-        if self.collision_cnt >= 6:
+        if self.collision_cnt >= 10:
             self.collision_cnt = 0
             reward -= 200
             done = True
