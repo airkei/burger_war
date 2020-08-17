@@ -73,6 +73,7 @@ class Train:
                 vel_min_x = d.get('vel_min_x')
                 vel_max_z = d.get('vel_max_z')
 
+            env = gym.wrappers.Monitor(env, outdir, force=True)
             ql = qlearn.QLearn(actions=actions, alpha=alpha, gamma=gamma, epsilon=epsilon)
             ql.loadWeights(weights_path)
 
@@ -82,7 +83,7 @@ class Train:
         total_episodes = epochs
 
         env.set_mode(testMode, caMode, vel_max_x, vel_min_x, vel_max_z, scan_points)
-        for x in range(total_episodes):
+        for x in range(int(resume_epoch), total_episodes):
             done = False
 
             cumulated_reward = 0 #Should going forward give more reward then L/R ?
