@@ -11,7 +11,7 @@ echo "model path add .bashrc"
 echo "export GAZEBO_MODEL_PATH=$HOME/catkin_ws/src/burger_war/burger_war/models/" >> ~/.bashrc
 source ~/.bashrc
 
-echo "# pip のインストール" 
+echo "# pip のインストール"
 sudo apt-get install -y python-pip
 
 echo "#　requests flask のインストール"
@@ -36,7 +36,6 @@ pip install numpy==1.16.6 \
                 setuptools==44.1.1 \
                 grpcio==1.27.2 \
                 mock==3.0.5 \
-                gym==0.16.0 \
                 tensorflow==1.14.0 \
                 tensorflow-gpu==1.14.0 \
                 keras==2.3.0 \
