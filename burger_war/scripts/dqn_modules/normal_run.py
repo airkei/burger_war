@@ -245,23 +245,23 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         state = self.scan_env()
         _, collision, points = self.calculate_observation(self.scan)
 
-        # vel/collision reward
+        # reward
         reward = 0
         if collision:
             self.collision_cnt = self.collision_cnt + 1
-            reward -= 5
         else:
             self.collision_cnt = 0
-            reward += 30 * abs(vel_cmd.linear.x)
+        # velocity reward
+        reward += 30 * abs(vel_cmd.linear.x)
 
-            # map reward
-            if (-0.5 <= self.pose_x <= 0.5) and (-0.5 <= self.pose_y <= 0.5):
-                reward += 2
+        # map reward
+        if (-0.5 <= self.pose_x <= 0.5) and (-0.5 <= self.pose_y <= 0.5):
+            reward += 2
 
         # point reward
         if not self.collisionMode: # production mode
             try:
-                reward += (self.war_state_dict['scores_r'] - self.prev_score) * 5
+                reward += (self.war_state_dict['scores_r'] - self.prev_score) * 10
                 self.prev_score = self.war_state_dict['scores_r']
             except:
                 pass
