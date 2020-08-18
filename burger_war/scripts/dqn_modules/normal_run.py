@@ -270,7 +270,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         done = self.is_game_timeout() or self.is_game_called()
 
         critical = len(points) > 0 and ((min(points) <= 45) or (max(points) >= 315))
-        if ((self.collision_cnt >= 6) or critical:
+        if ((self.collision_cnt >= 6) or critical):
             self.collision_cnt = 0
             reward -= 200
             done = True
