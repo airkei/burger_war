@@ -182,9 +182,12 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         return False
 
     def is_game_called(self):
-        if abs(self.war_state_dict['scores_b'] - self.war_state_dict['scores_r']) >= GAME_CALLED_SCORE:
-            print('[GAME]called game')
-            return True
+        try:
+            if abs(self.war_state_dict['scores_b'] - self.war_state_dict['scores_r']) >= GAME_CALLED_SCORE:
+                print('[GAME]called game')
+                return True
+        except:
+            pass
         return False
 
     def is_get_enemy_points(self):
