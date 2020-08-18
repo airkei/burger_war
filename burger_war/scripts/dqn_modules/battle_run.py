@@ -324,7 +324,6 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
             data = self.wait_for_topic('/scan')
             self.scan = data.ranges
-            self.wait_for_topic('/war_state')
         else:
             for _ in range(2):        
                 # Resets the state of the environment and returns an initial observation.
@@ -351,7 +350,6 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
                 data = self.wait_for_topic('/scan')
                 self.scan = data.ranges
-                self.wait_for_topic('/war_state')
 
         state = self.scan_env()
 

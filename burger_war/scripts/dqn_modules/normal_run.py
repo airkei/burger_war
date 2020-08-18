@@ -172,10 +172,12 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
     def calculate_observation(self, data):
         min_range = LIDAR_COLLISION_RANGE
         done = False
-        for distance in data:
+        points = []
+        for i, distance in enumerate(data):
             if (min_range > distance > 0):
                 done = True
-        return data, done
+                points.append(i)
+        return data, done, points
 
 ### Geme System Function ###
     def is_game_timeout(self):
@@ -238,9 +240,9 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
         # scan
         state = self.scan_env()
-        _, collision = self.calculate_observation(self.scan)
+        _, collision, points = self.calculate_observation(self.scan)
 
-        # vel/collistion reward
+        # vel/collision reward
         reward = 0
         if collision:
             self.collision_cnt = self.collision_cnt + 1
@@ -260,7 +262,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
         # check game end
         done = self.is_game_timeout() or self.is_game_called()
-        if self.collision_cnt >= 6:
+        if ((self.collision_cnt >= 6) or (min(points) <= 45) or (max(points) >= 315)):
             self.collision_cnt = 0
             reward -= 200
             done = True
@@ -287,7 +289,6 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
             data = self.wait_for_topic('/scan')
             self.scan = data.ranges
-            self.wait_for_topic('/war_state')
         else:
             for _ in range(2):        
                 # Resets the state of the environment and returns an initial observation.
@@ -309,12 +310,11 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
                 pose.pose.pose.orientation.w=1.0
                 pub.publish(pose)
 
-                # resert variables
+                # reset variables
                 self.var_reset()
 
                 data = self.wait_for_topic('/scan')
                 self.scan = data.ranges
-                self.wait_for_topic('/war_state')
 
         state = self.scan_env()
 
