@@ -3,11 +3,11 @@
 
 import rospy
 
-# import dqn_modules
-# from dqn_modules import train
+import dqn_modules
+from dqn_modules import train
 
-import qlearn_modules
-from qlearn_modules import train
+# import qlearn_modules
+# from qlearn_modules import train
 
 
 if __name__ == '__main__':
