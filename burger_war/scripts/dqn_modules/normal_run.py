@@ -251,11 +251,11 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
             self.collision_cnt = self.collision_cnt + 1
         else:
             self.collision_cnt = 0
-        # velocity reward
-        reward += 30 * abs(vel_cmd.linear.x)
+            # velocity reward
+            reward += 30 * abs(vel_cmd.linear.x)
 
-        # map reward
-        if (-0.5 <= self.pose_x <= 0.5) and (-0.5 <= self.pose_y <= 0.5):
+            # map reward
+            if (-0.5 <= self.pose_x <= 0.5) and (-0.5 <= self.pose_y <= 0.5):
             reward += 2
 
         # point reward
