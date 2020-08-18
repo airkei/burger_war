@@ -187,9 +187,12 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         return False
 
     def is_game_called(self):
-        if abs(self.war_state_dict['scores_b'] - self.war_state_dict['scores_r']) >= GAME_CALLED_SCORE:
-            print('[GAME]called game')
-            return True
+        try:
+            if abs(self.war_state_dict['scores_b'] - self.war_state_dict['scores_r']) >= GAME_CALLED_SCORE:
+                print('[GAME]called game')
+                return True
+        except:
+            pass
         return False
 ### Geme System Function ###
 
@@ -257,12 +260,17 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
         # point reward
         if not self.collisionMode: # production mode
-            reward += (self.war_state_dict['scores_r'] - self.prev_score) * 5
-            self.prev_score = self.war_state_dict['scores_r']
+            try:
+                reward += (self.war_state_dict['scores_r'] - self.prev_score) * 5
+                self.prev_score = self.war_state_dict['scores_r']
+            except:
+                pass
 
         # check game end
         done = self.is_game_timeout() or self.is_game_called()
-        if ((self.collision_cnt >= 6) or (min(points) <= 45) or (max(points) >= 315)):
+
+        critical = len(points) > 0 and ((min(points) <= 45) or (max(points) >= 315))
+        if ((self.collision_cnt >= 6) or critical:
             self.collision_cnt = 0
             reward -= 200
             done = True
