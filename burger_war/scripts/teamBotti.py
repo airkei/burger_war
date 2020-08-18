@@ -15,9 +15,9 @@ if __name__ == '__main__':
     training = train.Train()
 
     # Only for collision avoidance
-    training.start(testMode='train', caMode=True) # For training
-    # training.start(testMode='test', caMode=True) # For test
+    training.start(runMode='train', collisionMode=True) # For training
+    # training.start(runMode='test', collisionMode=True) # For test
 
     # For Production
-    # training.start(testMode='train', caMode=False) # For training
-    # training.start(testMode='test', caMode=False) # For test
+    # training.start(runMode='train', collisionMode=False) # For training
+    # training.start(runMode='test', collisionMode=False) # For test

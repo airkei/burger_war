@@ -13,7 +13,6 @@ from std_msgs.msg import String
 from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Twist
 from geometry_msgs.msg import PoseWithCovarianceStamped
-from opencv_apps.msg import CircleArrayStamped
 
 import gazebo_env
 
@@ -36,16 +35,19 @@ LIDAR_COLLISION_RANGE = 0.12
 MAP_WIDTH_X = 3.2
 MAP_WIDTH_Y = 3.2
 
-# For Enemy Camera Detection
-ENEMY_CAM_THRESHOLD_Y = 280
+# Enemy Detection
+ENEMY_MAX_DISTANCE = 0.7
+ENEMY_MAX_DIRECTION = (2 * PI)
+ENEMY_MAX_POINT = 20
 
+# Game
+GAME_DURATION_SEC = 180
+GAME_CALLED_SCORE = 10
 
 class BottiNodeEnv(gazebo_env.GazeboEnv):
 
     def __init__(self):
         self.vel_pub = rospy.Publisher('cmd_vel', Twist, queue_size=5)
-        self.unpause = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
-        self.pause = rospy.ServiceProxy('/gazebo/pause_physics', Empty)
         self.reset_proxy = rospy.ServiceProxy('/gazebo/reset_simulation', Empty)
         self.reward_range = (-np.inf, np.inf)
         self._seed()
@@ -57,15 +59,13 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         rospy.Subscriber('scan', LaserScan, self.lidar_callback)
         # AMCL callback
         rospy.Subscriber('amcl_pose', PoseWithCovarianceStamped, self.pose_callback)
-        # Camera
-        rospy.Subscriber('hough_circles/circles', CircleArrayStamped, self.camera_callback)
         # WarState callback
         rospy.Subscriber('war_state', String, self.war_state_callback)
 
     # Mode Setting
-    def set_mode(self, testMode, caMode, outputs, vel_max_x, vel_min_x, vel_max_z):
-        self.testMode = testMode
-        self.caMode = caMode
+    def set_mode(self, runMode, collisionMode, outputs, vel_max_x, vel_min_x, vel_max_z):
+        self.runMode = runMode
+        self.collisionMode = collisionMode
         self.outputs = outputs
 
         self.vel_max_x = vel_max_x
@@ -90,10 +90,6 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         self.pose_x = 0
         self.pose_y = 0
         self.th = 0
-        # Camera
-        self.enemy_cam_detect = 0
-        self.enemy_cam_pose_x = 0
-        self.enemy_cam_pose_y = 0
         # WarState callback
         self.war_state = String()
         self.war_state_dict = {}
@@ -134,10 +130,9 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         th = (self.pose_y + PI) / (2 * PI) 
         env_list.extend([pose_x, pose_y, th])
 
-        if not self.caMode:
+        if not self.collisionMode:
             # Enemy Detection(4)
             # normalization(min:0/max:1)
-            is_near_enemy = self.is_near_enemy
             if self.is_near_enemy == True:
                 is_near_enemy = 1
             else:
@@ -146,24 +141,18 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
             enemy_direction = self.enemy_direction
             if self.enemy_direction is None:
                 enemy_direction = 0
-            enemy_direction = enemy_direction / (2 * PI)
+            enemy_direction /= ENEMY_MAX_DIRECTION
 
             enemy_dist = self.enemy_dist
             if self.enemy_dist is None:
                 enemy_dist = 0
-            enemy_dist = enemy_dist / 0.7
+            enemy_dist /=  ENEMY_MAX_DISTANCE
 
             enemy_point = float(self.enemy_point)
-            if enemy_point > 20:
-                enemy_point = 20
-            enemy_point = enemy_point / 20
+            if enemy_point > ENEMY_MAX_POINT:
+                enemy_point = ENEMY_MAX_POINT
+            enemy_point /=  ENEMY_MAX_POINT
             env_list.extend([is_near_enemy, enemy_direction, enemy_dist, enemy_point])
-
-            # Camera(3)
-            # normalization(min:0/max:1)
-            x = self.enemy_cam_pose_x / 640
-            y = self.enemy_cam_pose_y / 480
-            env_list.extend([self.enemy_cam_detect, x, y]) 
 
             # War State(18)
             war_state = [0] * 18
@@ -190,13 +179,13 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
 ### Geme System Function ###
     def is_game_timeout(self):
-        if rospy.get_rostime().secs - self.sim_starttime.secs >= 180:
+        if rospy.get_rostime().secs - self.sim_starttime.secs >= GAME_DURATION_SEC:
             print('[GAME]timeout')
             return True
         return False
 
     def is_game_called(self):
-        if abs(self.war_state_dict['scores_b'] - self.war_state_dict['scores_r']) >= 10:
+        if abs(self.war_state_dict['scores_b'] - self.war_state_dict['scores_r']) >= GAME_CALLED_SCORE:
             print('[GAME]called game')
             return True
         return False
@@ -204,7 +193,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
 ### Callback ###
     def lidar_callback(self, data):
-        # self.scan = data.ranges
+        self.scan = data.ranges
         # enemy detection
         self.is_near_enemy, self.enemy_direction, self.enemy_dist, self.enemy_point = self.enemy_detector.findEnemy(data.ranges, self.pose_x, self.pose_y, self.th)
 
@@ -218,21 +207,8 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         self.th = rpy[2]
 # End Respect
 
-    def camera_callback(self, data):
-        self.enemy_cam_detect = 0
-        self.enemy_cam_pose_x = 0
-        self.enemy_cam_pose_y = 0
-
-        for circle in data.circles:
-            if circle.center.y >= ENEMY_CAM_THRESHOLD_Y:
-                self.enemy_cam_detect = 1
-                self.enemy_cam_pose_x = circle.center.x
-                self.enemy_cam_pose_y = circle.center.y
-                break
-
     def war_state_callback(self, data):
         self.war_state_dict = flatten(json.loads(data.data.replace('\n', '')))
-
 ### Callback ###
 
 ### Gym Functions ###
@@ -272,14 +248,13 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         else:
             self.collision_cnt = 0
             reward += 15 * abs(vel_cmd.linear.x)
-            reward += round(4 * (self.vel_max_z - abs(ang_vel)), 2)
 
             # map reward
             if (-0.5 <= self.pose_x <= 0.5) and (-0.5 <= self.pose_y <= 0.5):
                 reward += 2
 
         # point reward
-        if not self.caMode: # production mode
+        if not self.collisionMode: # production mode
             reward += (self.war_state_dict['scores_r'] - self.prev_score) * 5
             self.prev_score = self.war_state_dict['scores_r']
 
@@ -301,13 +276,13 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
         rospy.loginfo('action:' + str(action) + ', reward:' + str(reward))
 
-        if self.testMode == 'test':
+        if self.runMode == 'test':
             done = False
 
         return np.asarray(state), reward, done, {}
 
     def reset(self):
-        if self.testMode == 'test':
+        if self.runMode == 'test':
             self.var_reset()
 
             data = self.wait_for_topic('/scan')

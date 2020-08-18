@@ -2,5 +2,5 @@ from gym.envs.registration import register
 
 register(
     id='BurgerWarWorld-v0',
-    entry_point='dqn_modules.botti:BottiNodeEnv'
+    entry_point='dqn_modules.normal_run:BottiNodeEnv'
 )

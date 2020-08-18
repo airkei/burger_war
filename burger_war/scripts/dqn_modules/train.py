@@ -23,7 +23,7 @@ class Train:
             print(file)
             os.unlink(file)
 
-    def start(self, testMode='test', caMode=False):
+    def start(self, runMode='test', collisionMode=False):
         task_and_robot_environment_name = rospy.get_param("/burger/task_and_robot_environment_name")
         env = gym.make(task_and_robot_environment_name)
 
@@ -75,7 +75,7 @@ class Train:
                 save_interval = d.get('save_interval')
                 epochs = d.get('epochs')
                 steps = d.get('steps')
-                if testMode == 'test':
+                if runMode == 'test':
                     explorationRate = 0
                 else:
                     explorationRate = d.get('explorationRate')
@@ -111,7 +111,7 @@ class Train:
 
         env._max_episode_steps = steps # env returns done after _max_episode_steps
         prod = False
-        if testMode == 'test':
+        if runMode == 'test':
             prod = True
         env = gym.wrappers.Monitor(env, outdir, force=not prod, resume=prod)
 
@@ -123,7 +123,7 @@ class Train:
         start_time = time.time()
 
         #start iterating from 'current epoch'.
-        env.set_mode(testMode, caMode, network_outputs, vel_max_x, vel_min_x, vel_max_z)
+        env.set_mode(runMode, collisionMode, network_outputs, vel_max_x, vel_min_x, vel_max_z)
         for epoch in xrange(current_epoch+1, epochs+1, 1):
             observation = env.reset()
 
@@ -143,7 +143,7 @@ class Train:
 
                 deepQ.addMemory(observation, action, reward, newObservation, done)
 
-                if ((testMode != 'test') and (stepCounter >= learnStart)):
+                if ((runMode != 'test') and (stepCounter >= learnStart)):
                     if stepCounter <= updateTargetNetwork:
                         deepQ.learnOnMiniBatch(minibatch_size, False)
                     else :
@@ -186,12 +186,12 @@ class Train:
 
                 episode_step += 1
 
-            if testMode == 'train':
+            if runMode == 'train':
                 explorationRate *= epsilon_decay #epsilon decay
                 # explorationRate -= (2.0/epochs)
                 explorationRate = max (0.05, explorationRate)
 
-            if testMode == 'test':
+            if runMode == 'test':
                 break
 
         env.close()

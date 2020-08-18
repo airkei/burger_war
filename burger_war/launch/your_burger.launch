@@ -61,20 +61,10 @@
     <!-- END sample program node -->
 
     <!-- *** CONFIGURATION *** -->
-    <!-- <rosparam command="load" file="$(find burger_war)/config/burger_war_params.yaml"/> -->
-    <rosparam command="load" file="$(find burger_war)/config/burger_war_q_params.yaml"/>
+    <rosparam command="load" file="$(find burger_war)/config/burger_war_params.yaml"/>
+    <!-- <rosparam command="load" file="$(find burger_war)/config/burger_war_q_params.yaml"/> -->
 
     <!-- *** MODEL *** -->
-    <!-- joystick -->
-    <!-- <node pkg="joy" type="joy_node" name="joy_node"/> -->
-
-    <!-- opencv app for circle detection -->
-    <!-- <node pkg="opencv_apps" type="hough_circles" name="hough_circles"> -->
-    <!--     <param name="use_camera_info" value="false"/> -->
-    <!--     <param name="debug_view" value="false"/> -->
-    <!--     <remap from="/image" to="image_raw" /> -->
-    <!-- </node> -->
-
     <!-- botti -->
     <node pkg="burger_war" type="teamBotti.py" name="teamBotti" output="screen"/>
 
