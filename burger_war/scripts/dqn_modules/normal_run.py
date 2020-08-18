@@ -250,8 +250,8 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
             reward += 30 * abs(vel_cmd.linear.x)
 
             # map reward
-            # if (-0.5 <= self.pose_x <= 0.5) and (-0.5 <= self.pose_y <= 0.5):
-            #     reward += 2
+            if (-0.5 <= self.pose_x <= 0.5) and (-0.5 <= self.pose_y <= 0.5):
+                reward += 2
 
         # point reward
         if not self.collisionMode: # production mode
