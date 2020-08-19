@@ -15,16 +15,17 @@ if __name__ == '__main__':
     print('side = ' + side)
 
     rospy.init_node('botti')
-    training = train.Train()
 
     # Only for collision avoidance
-    # training.start(runMode='train', collisionMode=True) # For training
-    # training.start(runMode='test', collisionMode=True) # For test
+    # training = train.Train(side=side, runMode='train', collisionMode=True) # For training
+    # training = train.Train(side=side, runMode='test',  collisionMode=True) # For test
 
     # For Production
-    training.start(runMode='train', collisionMode=False, side=side) # For training
-    # training.start(runMode='test', collisionMode=False) # For test
+    training = train.Train(side=side, runMode='train', collisionMode=False) # For training
+    # training = train.Train(side=side, runMode='test',  collisionMode=False) # For test
 
     # For Battle
-    # training.start(runMode='train', battleMode=True) # For training
-    # training.start(runMode='test', battleMode=False) # For test
+    # training = train.Train(side=side, runMode='train', battleMode=True) # For training
+    # training = train.Train(side=side, runMode='test',  battleMode=True) # For test
+
+    training.start()
