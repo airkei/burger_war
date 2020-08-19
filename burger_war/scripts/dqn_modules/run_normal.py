@@ -256,7 +256,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
             # map reward
             if (-0.5 <= self.pose_x <= 0.5) and (-0.5 <= self.pose_y <= 0.5):
-            reward += 2
+                reward += 2
 
         # point reward
         if not self.collisionMode: # production mode
