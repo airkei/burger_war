@@ -256,7 +256,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
             # map reward
             if (-0.5 <= self.pose_x <= 0.5) and (-0.5 <= self.pose_y <= 0.5):
-            reward += 2
+                reward += 2
 
         # point reward
         if not self.collisionMode: # production mode
@@ -276,13 +276,14 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
             done = True
 
             # emergency recovery
-            for _ in range(12):
-                vel_cmd.linear.x = -self.vel_max_x
-                vel_cmd.angular.z = 0
-                self.vel_pub.publish(vel_cmd)
-                data = self.wait_for_topic('/scan')
-                self.scan = data.ranges
-            state = self.scan_env()
+            if self.runMode == 'test':            
+                for _ in range(12):
+                    vel_cmd.linear.x = -self.vel_max_x
+                    vel_cmd.angular.z = 0
+                    self.vel_pub.publish(vel_cmd)
+                    data = self.wait_for_topic('/scan')
+                    self.scan = data.ranges
+                state = self.scan_env()
 
         rospy.loginfo('action:' + str(action) + ', reward:' + str(reward))
 

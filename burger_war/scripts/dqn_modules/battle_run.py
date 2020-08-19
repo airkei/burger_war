@@ -169,10 +169,12 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
     def calculate_observation(self, data):
         min_range = LIDAR_COLLISION_RANGE
         done = False
-        for distance in data:
+        points = []
+        for i, distance in enumerate(data):
             if (min_range > distance > 0):
                 done = True
-        return data, done
+                points.append(i)
+        return data, done, points
 
 ### Geme System Function ###
     def is_game_timeout(self):
@@ -267,7 +269,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
         # scan
         state = self.scan_env()
-        _, collision = self.calculate_observation(self.scan)
+        _, collision, points = self.calculate_observation(self.scan)
 
         # vel/collistion reward
         reward = 0
@@ -299,20 +301,23 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         self.war_state_enemy_b_prev = self.war_state_enemy_b
 
         # check game end
-        done = self.is_game_timeout() or self.is_get_enemy_points()
-        if self.collision_cnt >= 6:
+        done = self.is_game_timeout() or self.is_game_called()
+
+        critical = len(points) > 0 and ((min(points) <= 45) or (max(points) >= 315))
+        if ((self.collision_cnt >= 6) or critical):
             self.collision_cnt = 0
             reward -= 100
             done = True
 
             # emergency recovery
-            for _ in range(12):
-                vel_cmd.linear.x = -self.vel_max_x
-                vel_cmd.angular.z = 0
-                self.vel_pub.publish(vel_cmd)
-                data = self.wait_for_topic('/scan')
-                self.scan = data.ranges
-            state = self.scan_env()
+            if self.runMode == 'test':            
+                for _ in range(12):
+                    vel_cmd.linear.x = -self.vel_max_x
+                    vel_cmd.angular.z = 0
+                    self.vel_pub.publish(vel_cmd)
+                    data = self.wait_for_topic('/scan')
+                    self.scan = data.ranges
+                state = self.scan_env()
 
         rospy.loginfo('action:' + str(action) + ', reward:' + str(reward))
 
@@ -348,7 +353,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
                 pose.pose.pose.orientation.w=1.0
                 pub.publish(pose)
 
-                # resert variables
+                # reset variables
                 self.var_reset()
 
                 data = self.wait_for_topic('/scan')

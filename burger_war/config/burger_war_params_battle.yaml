@@ -1,4 +1,3 @@
-
 burger: #namespace
     task_and_robot_environment_name: 'BurgerWarWorld-v0'
 
