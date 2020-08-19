@@ -182,13 +182,13 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
                     else:
                         war_field_state[cnt] = 0
                     cnt += 1
+                print(war_field_state)
             except:
                 pass
-            print(war_field_state)
             env_list.extend(war_field_state)
 
             # War Enemy Burger State(3)
-            war_burger_state = [0] * POINT_BURGER_NUM
+            war_burger_state = [0] * (POINT_BURGER_NUM/2)
             try:
                 cnt = 0
                 for i in range(0, POINT_NUM):
@@ -204,9 +204,9 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
                         else:
                             war_burger_state[cnt] = 0
                         cnt += 1
+                print(war_burger_state)
             except:
                 pass
-            print(war_burger_state)
             env_list.extend(war_burger_state)
 
         return env_list
