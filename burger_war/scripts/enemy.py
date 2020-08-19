@@ -95,7 +95,10 @@ class SioBot():
             # publish twist topic
             self.vel_pub.publish(twist)
 
-            r.sleep()
+            try:
+                r.sleep()
+            except:
+                pass
 
 
 if __name__ == '__main__':

@@ -6,15 +6,18 @@ import rospy
 import dqn_modules
 from dqn_modules import train
 
+# import qlearn_modules
+# from qlearn_modules import train
+
 
 if __name__ == '__main__':
-    rospy.init_node('dqn_run')
-    dqntrain = train.Train()
+    rospy.init_node('botti')
+    training = train.Train()
 
     # Only for collision avoidance
-    # dqntrain.start(testMode='train', caMode=True) # For training
-    dqntrain.start(testMode='test', caMode=True) # For test
+    training.start(runMode='train', collisionMode=True) # For training
+    # training.start(runMode='test', collisionMode=True) # For test
 
     # For Production
-    # dqntrain.start(testMode='train', caMode=False) # For training
-    # dqntrain.start(testMode='test', caMode=False) # For test
+    # training.start(runMode='train', collisionMode=False) # For training
+    # training.start(runMode='test', collisionMode=False) # For test

@@ -1,3 +1,4 @@
+
 burger: #namespace
     task_and_robot_environment_name: 'BurgerWarWorld-v0'
 
@@ -15,9 +16,9 @@ burger: #namespace
 
     updateTargetNetwork: 10000
     learnStart: 64
-    network_inputs: 184
-    network_outputs: 10
-    network_structure: [184,184]
+    network_inputs: 370
+    network_outputs: 20
+    network_structure: [370,370]
 
     epsilon_decay: 0.995
 
