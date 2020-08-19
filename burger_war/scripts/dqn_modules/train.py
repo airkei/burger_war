@@ -134,7 +134,7 @@ class Train:
         start_time = time.time()
 
         #start iterating from 'current epoch'.
-        env.set_mode(self.runMode, self.collisionMode, network_outputs, vel_max_x, vel_min_x, vel_max_z)
+        env.set_mode(self.side, self.runMode, self.collisionMode, network_outputs, vel_max_x, vel_min_x, vel_max_z)
         for epoch in xrange(current_epoch+1, epochs+1, 1):
             observation = env.reset()
 

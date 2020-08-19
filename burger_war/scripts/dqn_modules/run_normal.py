@@ -63,7 +63,8 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         rospy.Subscriber('war_state', String, self.war_state_callback)
 
     # Mode Setting
-    def set_mode(self, runMode, collisionMode, outputs, vel_max_x, vel_min_x, vel_max_z):
+    def set_mode(self, side, runMode, collisionMode, outputs, vel_max_x, vel_min_x, vel_max_z):
+        self.side = side
         self.runMode = runMode
         self.collisionMode = collisionMode
         self.outputs = outputs
@@ -262,10 +263,14 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         # point reward
         if not self.collisionMode: # production mode
             try:
-                reward += (self.war_state_dict['scores_r'] - self.prev_score_r) * 10
-                self.prev_score_r = self.war_state_dict['scores_r']
+                if self.side == 'r'
+                    reward += (self.war_state_dict['scores_r'] - self.prev_score_r) * 10
+                    reward -= (self.war_state_dict['scores_b'] - self.prev_score_b) * 10
+                else:
+                    reward -= (self.war_state_dict['scores_r'] - self.prev_score_r) * 10
+                    reward += (self.war_state_dict['scores_b'] - self.prev_score_b) * 10
 
-                reward -= (self.war_state_dict['scores_b'] - self.prev_score_b) * 10
+                self.prev_score_r = self.war_state_dict['scores_r']
                 self.prev_score_b = self.war_state_dict['scores_b']
             except:
                 pass
