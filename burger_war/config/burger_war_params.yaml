@@ -14,12 +14,12 @@ burger: #namespace
     memorySize: 1000000
 
     updateTargetNetwork: 10000
-    learnStart: 64
-    network_inputs: 184
+    learnStart: 0
+    network_inputs: 206
     network_outputs: 10
-    network_structure: [184,184]
+    network_structure: [206,206,206]
 
-    epsilon_decay: 0.995
+    epsilon_decay: 0.997
 
     # maximum velocity
     vel_max_x: 0.22
