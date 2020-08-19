@@ -155,16 +155,22 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
                 is_near_enemy = 0
 
             enemy_direction = self.enemy_direction
+            if self.is_near_enemy == False:
+                enemy_direction = 0
             if self.enemy_direction is None:
                 enemy_direction = 0
             enemy_direction /= ENEMY_MAX_DIRECTION
 
             enemy_dist = self.enemy_dist
+            if self.is_near_enemy == False:
+                enemy_dist = 0
             if self.enemy_dist is None:
                 enemy_dist = 0
             enemy_dist /=  ENEMY_MAX_DISTANCE
 
             enemy_point = float(self.enemy_point)
+            if self.is_near_enemy == False:
+                enemy_point = 0
             if enemy_point > ENEMY_MAX_POINT:
                 enemy_point = ENEMY_MAX_POINT
             enemy_point /=  ENEMY_MAX_POINT
