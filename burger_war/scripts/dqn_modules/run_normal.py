@@ -172,41 +172,35 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
             # War Field State(12)
             war_field_state = [0] * POINT_FIELD_NUM
-            try:
-                cnt = 0
-                for i in range(0, POINT_NUM):
-                    if self.war_state_dict['targets_{}_player'.format(i)] in POINT_BURGER_NAME_LIST:
-                        continue
-                    if self.war_state_dict['targets_{}_player'.format(i)] == self.side:
-                        war_field_state[cnt] = 1
-                    else:
-                        war_field_state[cnt] = 0
-                    cnt += 1
-                print(war_field_state)
-            except:
-                pass
+            cnt = 0
+            for i in range(0, POINT_NUM):
+                if self.war_state_dict['targets_{}_player'.format(i)] in POINT_BURGER_NAME_LIST:
+                    continue
+                if self.war_state_dict['targets_{}_player'.format(i)] == self.side:
+                    war_field_state[cnt] = 1
+                else:
+                    war_field_state[cnt] = 0
+                cnt += 1
+            print(war_field_state)
             env_list.extend(war_field_state)
 
             # War Enemy Burger State(3)
             war_burger_state = [0] * (POINT_BURGER_NUM/2)
-            try:
-                cnt = 0
-                for i in range(0, POINT_NUM):
-                    if ((self.side == 'r') and ('targets_{}_name'.format(i) in POINT_BURGER_NAME_BLUE_LIST)):
-                        if self.war_state_dict['targets_{}_player'.format(i)] == self.side:
-                            war_burger_state[cnt] = 1
-                        else:
-                            war_burger_state[cnt] = 0
-                        cnt += 1
-                    if ((self.side == 'b') and ('targets_{}_name'.format(i) in POINT_BURGER_NAME_RED_LIST)):
-                        if self.war_state_dict['targets_{}_player'.format(i)] == self.side:
-                            war_burger_state[cnt] = 1
-                        else:
-                            war_burger_state[cnt] = 0
-                        cnt += 1
-                print(war_burger_state)
-            except:
-                pass
+            cnt = 0
+            for i in range(0, POINT_NUM):
+                if ((self.side == 'r') and ('targets_{}_name'.format(i) in POINT_BURGER_NAME_BLUE_LIST)):
+                    if self.war_state_dict['targets_{}_player'.format(i)] == self.side:
+                        war_burger_state[cnt] = 1
+                    else:
+                        war_burger_state[cnt] = 0
+                    cnt += 1
+                if ((self.side == 'b') and ('targets_{}_name'.format(i) in POINT_BURGER_NAME_RED_LIST)):
+                    if self.war_state_dict['targets_{}_player'.format(i)] == self.side:
+                        war_burger_state[cnt] = 1
+                    else:
+                        war_burger_state[cnt] = 0
+                    cnt += 1
+            print(war_burger_state)
             env_list.extend(war_burger_state)
 
         return env_list
@@ -373,6 +367,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
                 data = self.wait_for_topic('/scan')
                 self.scan = data.ranges
+                self.wait_for_topic('/war_state')
 
         state = self.scan_env()
 
