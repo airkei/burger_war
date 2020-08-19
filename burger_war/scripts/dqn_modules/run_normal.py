@@ -40,6 +40,20 @@ ENEMY_MAX_DISTANCE = 0.7
 ENEMY_MAX_DIRECTION = (2 * PI)
 ENEMY_MAX_POINT = 20
 
+# Point
+POINT_NUM = 18
+POINT_FIELD_NUM = 12
+POINT_BURGER_NUM = 6
+POINT_RED_R_NAME = 'RE_R'
+POINT_RED_L_NAME = 'RE_L'
+POINT_RED_B_NAME = 'RE_B'
+POINT_BLUE_R_NAME = 'BL_R'
+POINT_BLUE_L_NAME = 'BL_L'
+POINT_BLUE_B_NAME = 'BL_B'
+POINT_BURGER_NAME_RED_LIST = [POINT_RED_R_NAME, POINT_RED_L_NAME, POINT_RED_B_NAME]
+POINT_BURGER_NAME_BLUE_LIST = [POINT_BLUE_R_NAME, POINT_BLUE_L_NAME, POINT_BLUE_B_NAME]
+POINT_BURGER_NAME_LIST = [POINT_RED_R_NAME, POINT_RED_L_NAME, POINT_RED_B_NAME, POINT_BLUE_R_NAME, POINT_BLUE_L_NAME, POINT_BLUE_B_NAME]
+
 # Game
 GAME_DURATION_SEC = 180
 GAME_CALLED_SCORE = 10
@@ -156,18 +170,44 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
             enemy_point /=  ENEMY_MAX_POINT
             env_list.extend([is_near_enemy, enemy_direction, enemy_dist, enemy_point])
 
-            # War State(18)
-            war_state = [0] * 18
-            for i in range(0, 18):
-                # one-hot encoding
-                try:
-                    if self.war_state_dict['targets_{}_player'.format(i)] == 'r':
-                        war_state[i] = 1
+            # War Field State(12)
+            war_field_state = [0] * POINT_FIELD_NUM
+            try:
+                cnt = 0
+                for i in range(0, POINT_NUM):
+                    if self.war_state_dict['targets_{}_player'.format(i)] in POINT_BURGER_NAME_LIST:
+                        continue
+                    if self.war_state_dict['targets_{}_player'.format(i)] == self.side:
+                        war_field_state[cnt] = 1
                     else:
-                        war_state[i] = 0
-                except:
-                    war_state[i] = 0
-            env_list.extend(war_state)
+                        war_field_state[cnt] = 0
+                    cnt += 1
+            except:
+                pass
+            print(war_field_state)
+            env_list.extend(war_field_state)
+
+            # War Enemy Burger State(3)
+            war_burger_state = [0] * POINT_BURGER_NUM
+            try:
+                cnt = 0
+                for i in range(0, POINT_NUM):
+                    if ((self.side == 'r') and ('targets_{}_name'.format(i) in POINT_BURGER_NAME_BLUE_LIST)):
+                        if self.war_state_dict['targets_{}_player'.format(i)] == self.side:
+                            war_burger_state[cnt] = 1
+                        else:
+                            war_burger_state[cnt] = 0
+                        cnt += 1
+                    if ((self.side == 'b') and ('targets_{}_name'.format(i) in POINT_BURGER_NAME_RED_LIST)):
+                        if self.war_state_dict['targets_{}_player'.format(i)] == self.side:
+                            war_burger_state[cnt] = 1
+                        else:
+                            war_burger_state[cnt] = 0
+                        cnt += 1
+            except:
+                pass
+            print(war_burger_state)
+            env_list.extend(war_burger_state)
 
         return env_list
 
