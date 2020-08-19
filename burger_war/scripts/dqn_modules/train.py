@@ -23,8 +23,13 @@ class Train:
             print(file)
             os.unlink(file)
 
-    def start(self, runMode='test', collisionMode=False):
-        task_and_robot_environment_name = rospy.get_param("/burger/task_and_robot_environment_name")
+    def start(self, runMode='test', collisionMode=False, battleMode=False):
+        if battleMode:
+            ns = '/burger_battle/'
+        else:
+            ns = '/burger/'
+
+        task_and_robot_environment_name = rospy.get_param(ns + "task_and_robot_environment_name")
         env = gym.make(task_and_robot_environment_name)
 
         filepath = os.path.dirname(os.path.abspath(__file__))
@@ -34,7 +39,7 @@ class Train:
         dt_now = datetime.datetime.now()
         resultpath = filepath + '/model/' + dt_now.strftime('%Y-%m-%d-%H:%M:%S') + '.csv'
 
-        resume_epoch = rospy.get_param("/burger/resume_epoch") # change to epoch to continue from
+        resume_epoch = rospy.get_param(ns + "resume_epoch") # change to epoch to continue from
         resume_path = path + resume_epoch
         weights_path = resume_path + '.h5'
         monitor_path = resume_path
@@ -44,26 +49,26 @@ class Train:
             #Each time we take a sample and update our weights it is called a mini-batch.
             #Each time we run through the entire dataset, it's called an epoch.
             #PARAMETER LIST
-            save_interval = rospy.get_param("/burger/save_interval")
-            epochs = rospy.get_param("/burger/epochs")
-            steps = rospy.get_param("/burger/steps")
-            explorationRate = rospy.get_param("/burger/explorationRate")
-            minibatch_size = rospy.get_param("/burger/minibatch_size")
-            learningRate = rospy.get_param("/burger/learningRate")
-            discountFactor = rospy.get_param("/burger/discountFactor")
-            memorySize = rospy.get_param("/burger/memorySize")
-            updateTargetNetwork = rospy.get_param("/burger/updateTargetNetwork")
-            learnStart = rospy.get_param("/burger/learnStart")
-            network_inputs = rospy.get_param("/burger/network_inputs")
-            network_outputs = rospy.get_param("/burger/network_outputs")
-            network_structure = rospy.get_param("/burger/network_structure")
+            save_interval = rospy.get_param(ns + "save_interval")
+            epochs = rospy.get_param(ns + "epochs")
+            steps = rospy.get_param(ns + "steps")
+            explorationRate = rospy.get_param(ns + "explorationRate")
+            minibatch_size = rospy.get_param(ns + "minibatch_size")
+            learningRate = rospy.get_param(ns + "learningRate")
+            discountFactor = rospy.get_param(ns + "discountFactor")
+            memorySize = rospy.get_param(ns + "memorySize")
+            updateTargetNetwork = rospy.get_param(ns + "updateTargetNetwork")
+            learnStart = rospy.get_param(ns + "learnStart")
+            network_inputs = rospy.get_param(ns + "network_inputs")
+            network_outputs = rospy.get_param(ns + "network_outputs")
+            network_structure = rospy.get_param(ns + "network_structure")
             current_epoch = 0
 
-            epsilon_decay = rospy.get_param("/burger/epsilon_decay")
+            epsilon_decay = rospy.get_param(ns + "epsilon_decay")
 
-            vel_max_x = rospy.get_param("/burger/vel_max_x")
-            vel_min_x = rospy.get_param("/burger/vel_min_x")
-            vel_max_z = rospy.get_param("/burger/vel_max_z")
+            vel_max_x = rospy.get_param(ns + "vel_max_x")
+            vel_min_x = rospy.get_param(ns + "vel_min_x")
+            vel_max_z = rospy.get_param(ns + "vel_max_z")
 
             deepQ = deepq.DeepQ(network_inputs, network_outputs, memorySize, discountFactor, learningRate, learnStart)
             deepQ.initNetworks(network_structure)
