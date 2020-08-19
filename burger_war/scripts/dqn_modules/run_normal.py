@@ -309,11 +309,11 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         if not self.collisionMode: # production mode
             try:
                 if self.side == 'r':
-                    reward += (self.war_state_dict['scores_r'] - self.prev_score_r) * 10
+                    reward += (self.war_state_dict['scores_r'] - self.prev_score_r) * 30
                     # reward -= (self.war_state_dict['scores_b'] - self.prev_score_b) * 10
                 else:
                     # reward -= (self.war_state_dict['scores_r'] - self.prev_score_r) * 10
-                    reward += (self.war_state_dict['scores_b'] - self.prev_score_b) * 10
+                    reward += (self.war_state_dict['scores_b'] - self.prev_score_b) * 30
 
                 self.prev_score_r = self.war_state_dict['scores_r']
                 self.prev_score_b = self.war_state_dict['scores_b']
