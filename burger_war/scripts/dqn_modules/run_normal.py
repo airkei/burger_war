@@ -176,6 +176,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
             for i in range(0, POINT_NUM):
                 if self.war_state_dict['targets_{}_player'.format(i)] in POINT_BURGER_NAME_LIST:
                     continue
+
                 if self.war_state_dict['targets_{}_player'.format(i)] == self.side:
                     war_field_state[cnt] = 1
                 else:
@@ -250,6 +251,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
     def war_state_callback(self, data):
         self.war_state_dict = flatten(json.loads(data.data.replace('\n', '')))
+        print(self.war_state_dict)
 ### Callback ###
 
 ### Gym Functions ###
