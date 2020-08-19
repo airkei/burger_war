@@ -304,9 +304,9 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
             try:
                 if self.side == 'r':
                     reward += (self.war_state_dict['scores_r'] - self.prev_score_r) * 10
-                    reward -= (self.war_state_dict['scores_b'] - self.prev_score_b) * 10
+                    # reward -= (self.war_state_dict['scores_b'] - self.prev_score_b) * 10
                 else:
-                    reward -= (self.war_state_dict['scores_r'] - self.prev_score_r) * 10
+                    # reward -= (self.war_state_dict['scores_r'] - self.prev_score_r) * 10
                     reward += (self.war_state_dict['scores_b'] - self.prev_score_b) * 10
 
                 self.prev_score_r = self.war_state_dict['scores_r']
@@ -372,7 +372,6 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
                 data = self.wait_for_topic('/scan')
                 self.scan = data.ranges
-                self.wait_for_topic('/war_state')
 
         state = self.scan_env()
 
