@@ -67,7 +67,7 @@
 
     <!-- *** MODEL *** -->
     <!-- botti -->
-    <node pkg="burger_war" type="teamBotti.py" name="teamBotti" output="screen"/>
+    <node pkg="burger_war" type="teamBotti.py" name="teamBotti" args="$(arg side)" output="screen"/>
 
     <!-- rviz -->
     <group if="$(arg open_rviz)">

@@ -76,7 +76,8 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
     def var_reset(self):
         self.sim_starttime = rospy.get_rostime()
         self.scan_time_prev = rospy.get_rostime()
-        self.prev_score = 0
+        self.prev_score_r = 0
+        self.prev_score_b = 0
         self.collision_cnt = 0
 
         # Enemy Detector
@@ -261,8 +262,11 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         # point reward
         if not self.collisionMode: # production mode
             try:
-                reward += (self.war_state_dict['scores_r'] - self.prev_score) * 10
-                self.prev_score = self.war_state_dict['scores_r']
+                reward += (self.war_state_dict['scores_r'] - self.prev_score_r) * 10
+                self.prev_score_r = self.war_state_dict['scores_r']
+
+                reward -= (self.war_state_dict['scores_b'] - self.prev_score_b) * 10
+                self.prev_score_b = self.war_state_dict['scores_b']
             except:
                 pass
 
