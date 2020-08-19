@@ -23,7 +23,7 @@ class Train:
             print(file)
             os.unlink(file)
 
-    def start(self, runMode='test', collisionMode=False, battleMode=False):
+    def start(self, runMode='test', collisionMode=False, battleMode=False, side=side):
         if battleMode:
             ns = '/burger_battle/'
         else:

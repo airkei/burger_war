@@ -11,6 +11,9 @@ from dqn_modules import train
 
 
 if __name__ == '__main__':
+    side = sys.argv[1]
+    print('side = ' + side)
+
     rospy.init_node('botti')
     training = train.Train()
 
@@ -19,7 +22,7 @@ if __name__ == '__main__':
     # training.start(runMode='test', collisionMode=True) # For test
 
     # For Production
-    training.start(runMode='train', collisionMode=False) # For training
+    training.start(runMode='train', collisionMode=False, side=side) # For training
     # training.start(runMode='test', collisionMode=False) # For test
 
     # For Battle
