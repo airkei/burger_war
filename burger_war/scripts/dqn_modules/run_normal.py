@@ -141,8 +141,8 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
         # AMCL(3)
         # normalization(min:0/max:1)
-        pose_x = (self.pose_x + MAP_WIDTH_X/2) / MAP_WIDTH_X
-        pose_y = (self.pose_y + MAP_WIDTH_Y/2) / MAP_WIDTH_Y
+        pose_x = abs((self.pose_x + MAP_WIDTH_X/2) / MAP_WIDTH_X)
+        pose_y = abs((self.pose_y + MAP_WIDTH_Y/2) / MAP_WIDTH_Y)
         th = (self.pose_y + PI) / (2 * PI) 
         env_list.extend([pose_x, pose_y, th])
 
