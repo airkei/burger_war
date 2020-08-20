@@ -199,19 +199,40 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
             try:
                 for i in range(0, POINT_NUM):
                     if ((self.side == 'r') and ('targets_{}_name'.format(i) in POINT_BURGER_NAME_BLUE_LIST)):
-                        if self.war_state_dict['targets_{}_player'.format(i)] == self.side:
+                        if self.war_state_dict['targets_{}_player'.format(i)] == 'r':
                             war_burger_state[cnt] = 1
                         else:
                             war_burger_state[cnt] = 0
                         cnt += 1
                     if ((self.side == 'b') and ('targets_{}_name'.format(i) in POINT_BURGER_NAME_RED_LIST)):
-                        if self.war_state_dict['targets_{}_player'.format(i)] == self.side:
+                        if self.war_state_dict['targets_{}_player'.format(i)] == 'b':
                             war_burger_state[cnt] = 1
                         else:
                             war_burger_state[cnt] = 0
                         cnt += 1
             except:
                 pass
+
+            # War Myself Burger State(3)
+            war_burger_state = [0] * (POINT_BURGER_NUM/2)
+            cnt = 0
+            try:
+                for i in range(0, POINT_NUM):
+                    if ((self.side == 'r') and ('targets_{}_name'.format(i) in POINT_BURGER_NAME_RED_LIST)):
+                        if self.war_state_dict['targets_{}_player'.format(i)] == 'b':
+                            war_burger_state[cnt] = 1
+                        else:
+                            war_burger_state[cnt] = 0
+                        cnt += 1
+                    if ((self.side == 'b') and ('targets_{}_name'.format(i) in POINT_BURGER_NAME_BLUE_LIST)):
+                        if self.war_state_dict['targets_{}_player'.format(i)] == 'r':
+                            war_burger_state[cnt] = 1
+                        else:
+                            war_burger_state[cnt] = 0
+                        cnt += 1
+            except:
+                pass
+
             env_list.extend(war_burger_state)
 
         return env_list
@@ -313,11 +334,11 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         if not self.collisionMode: # production mode
             try:
                 if self.side == 'r':
-                    reward += (self.war_state_dict['scores_r'] - self.prev_score_r) * 10
-                    # reward -= (self.war_state_dict['scores_b'] - self.prev_score_b) * 10
+                    reward += (self.war_state_dict['scores_r'] - self.prev_score_r) * 20
+                    reward -= (self.war_state_dict['scores_b'] - self.prev_score_b) * 20
                 else:
-                    # reward -= (self.war_state_dict['scores_r'] - self.prev_score_r) * 10
-                    reward += (self.war_state_dict['scores_b'] - self.prev_score_b) * 10
+                    reward -= (self.war_state_dict['scores_r'] - self.prev_score_r) * 20
+                    reward += (self.war_state_dict['scores_b'] - self.prev_score_b) * 20
 
                 self.prev_score_r = self.war_state_dict['scores_r']
                 self.prev_score_b = self.war_state_dict['scores_b']
