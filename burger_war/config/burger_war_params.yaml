@@ -23,5 +23,5 @@ burger: #namespace
 
     # maximum velocity
     vel_max_x: 0.22
-    vel_min_x: 0.12
+    vel_min_x: 0.11
     vel_max_z: 0.785398

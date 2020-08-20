@@ -341,9 +341,9 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
                     enemy_diff = self.war_state_dict['scores_r'] - self.prev_score_r
 
                 if myself_diff > 0:
-                    reward += myself_diff * 20
+                    reward += myself_diff * 10
                 if enemy_diff > 3:
-                    reward -= enemy_diff * 20
+                    reward -= enemy_diff * 10
 
                 self.prev_score_r = self.war_state_dict['scores_r']
                 self.prev_score_b = self.war_state_dict['scores_b']
