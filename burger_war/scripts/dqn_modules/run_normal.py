@@ -280,10 +280,14 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         vel_cmd.angular.z = ang_vel
         self.vel_pub.publish(vel_cmd)
 
-        # wait 400ms
+        # wait 600ms
         if (rospy.get_rostime() - self.scan_time_prev) <= rospy.Duration(0.3):
             # dummy read
             self.wait_for_topic('/scan')
+        if (rospy.get_rostime() - self.scan_time_prev) <= rospy.Duration(0.5):
+            # dummy read
+            self.wait_for_topic('/scan')
+
         data = self.wait_for_topic('/scan')
         self.scan = data.ranges
         self.scan_time_prev = rospy.get_rostime()
