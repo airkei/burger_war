@@ -16,7 +16,7 @@ burger: #namespace
     updateTargetNetwork: 10000
     learnStart: 0
     network_inputs: 116
-    network_outputs: 10
+    network_outputs: 5
     network_structure: [116,116]
 
     epsilon_decay: 0.996
