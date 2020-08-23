@@ -148,32 +148,38 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
         if not self.collisionMode:
             # Enemy Detection(4)
-            # normalization(min:0/max:1)
-            if self.is_near_enemy == True:
-                is_near_enemy = 1
-            else:
+            if rospy.get_rostime().secs - self.sim_starttime.secs <= 5:
                 is_near_enemy = 0
-
-            enemy_direction = self.enemy_direction
-            if self.is_near_enemy == False:
                 enemy_direction = 0
-            if self.enemy_direction is None:
-                enemy_direction = 0
-            enemy_direction /= ENEMY_MAX_DIRECTION
-
-            enemy_dist = self.enemy_dist
-            if self.is_near_enemy == False:
                 enemy_dist = 0
-            if self.enemy_dist is None:
-                enemy_dist = 0
-            enemy_dist /=  ENEMY_MAX_DISTANCE
-
-            enemy_point = float(self.enemy_point)
-            if self.is_near_enemy == False:
                 enemy_point = 0
-            if enemy_point > ENEMY_MAX_POINT:
-                enemy_point = ENEMY_MAX_POINT
-            enemy_point /=  ENEMY_MAX_POINT
+            else:
+                # normalization(min:0/max:1)
+                if self.is_near_enemy == True:
+                    is_near_enemy = 1
+                else:
+                    is_near_enemy = 0
+
+                enemy_direction = self.enemy_direction
+                if self.is_near_enemy == False:
+                    enemy_direction = 0
+                elif self.enemy_direction is None:
+                    enemy_direction = 0
+                enemy_direction /= ENEMY_MAX_DIRECTION
+
+                enemy_dist = self.enemy_dist
+                if self.is_near_enemy == False:
+                    enemy_dist = 0
+                elif self.enemy_dist is None:
+                    enemy_dist = 0
+                enemy_dist /=  ENEMY_MAX_DISTANCE
+
+                enemy_point = float(self.enemy_point)
+                if self.is_near_enemy == False:
+                    enemy_point = 0
+                elif enemy_point > ENEMY_MAX_POINT:
+                    enemy_point = ENEMY_MAX_POINT
+                enemy_point /=  ENEMY_MAX_POINT
             env_list.extend([is_near_enemy, enemy_direction, enemy_dist, enemy_point])
 
             # War Field State(12)
@@ -300,7 +306,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         #     vel_cmd.linear.x = self.vel_max_x
         # else:
         #     vel_cmd.linear.x = self.vel_min_x
-        if action == self.outputs//2:
+        if ((action != 0) and (action != (self.outputs - 1))):
             vel_cmd.linear.x = self.vel_max_x
         else:
             vel_cmd.linear.x = self.vel_min_x
@@ -345,11 +351,16 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
                 if myself_diff > 0:
                     reward += myself_diff * 10
-                if enemy_diff > 3:
-                    reward -= enemy_diff * 10
+                # if enemy_diff > 3:
+                #     reward -= enemy_diff * 10
 
                 self.prev_score_r = self.war_state_dict['scores_r']
                 self.prev_score_b = self.war_state_dict['scores_b']
+
+                if is_near_enemy:
+                    if ((enemy_direction <= (PI * 1/4)) or (enemy_direction >= (PI * 7/4))):
+                        reward += 5
+
             except:
                 pass
 

@@ -19,7 +19,7 @@ burger: #namespace
     network_outputs: 5
     network_structure: [116,116]
 
-    epsilon_decay: 0.996
+    epsilon_decay: 0.997
 
     # maximum velocity
     vel_max_x: 0.22
