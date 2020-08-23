@@ -301,6 +301,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         # vel_cmd.angular.z = ang_vel
         # self.vel_pub.publish(vel_cmd)
 
+        vel_cmd = Twist()
         ang_vel = ((action - self.outputs//2) * self.vel_max_z) / (self.outputs//2)
         vel_cmd.linear.x = self.vel_min_x 
         vel_cmd.angular.z = ang_vel
