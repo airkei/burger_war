@@ -306,8 +306,10 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         #     vel_cmd.linear.x = self.vel_max_x
         # else:
         #     vel_cmd.linear.x = self.vel_min_x
-        if ((action != 0) and (action != (self.outputs - 1))):
+        if action == self.outputs//2:
             vel_cmd.linear.x = self.vel_max_x
+        elif ((action != 0) and (action != (self.outputs - 1))):
+            vel_cmd.linear.x = (self.vel_max_x - self.vel_min_x)/2 + self.vel_min_x
         else:
             vel_cmd.linear.x = self.vel_min_x
         vel_cmd.angular.z = ang_vel
@@ -339,9 +341,9 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
             # if (-0.5 <= self.pose_x <= 0.5) and (-0.5 <= self.pose_y <= 0.5):
             #     reward += 2
 
-        # point reward
         if not self.collisionMode: # production mode
             try:
+                # point reward                
                 if self.side == 'r':
                     myself_diff = self.war_state_dict['scores_r'] - self.prev_score_r
                     enemy_diff = self.war_state_dict['scores_b'] - self.prev_score_b
@@ -357,6 +359,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
                 self.prev_score_r = self.war_state_dict['scores_r']
                 self.prev_score_b = self.war_state_dict['scores_b']
 
+                # enemy reward
                 if is_near_enemy:
                     if ((enemy_direction <= (PI * 1/4)) or (enemy_direction >= (PI * 7/4))):
                         reward += 3
