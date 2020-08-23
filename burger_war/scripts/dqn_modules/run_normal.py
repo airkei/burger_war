@@ -291,19 +291,13 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
     def step(self, action):
         # move
-        # ang_vel = ((action//2 - self.outputs//4) * self.vel_max_z) / (self.outputs//4)
-
-        # vel_cmd = Twist()
-        # if (action % 2) == 0:
-        #     vel_cmd.linear.x = self.vel_max_x
-        # else:
-        #     vel_cmd.linear.x = self.vel_min_x 
-        # vel_cmd.angular.z = ang_vel
-        # self.vel_pub.publish(vel_cmd)
+        ang_vel = ((action//2 - self.outputs//4) * self.vel_max_z) / (self.outputs//4)
 
         vel_cmd = Twist()
-        ang_vel = ((action - self.outputs//2) * self.vel_max_z) / (self.outputs//2)
-        vel_cmd.linear.x = self.vel_min_x 
+        if (action % 2) == 0:
+            vel_cmd.linear.x = self.vel_max_x
+        else:
+            vel_cmd.linear.x = self.vel_min_x 
         vel_cmd.angular.z = ang_vel
         self.vel_pub.publish(vel_cmd)
 
