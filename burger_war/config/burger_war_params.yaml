@@ -15,11 +15,11 @@ burger: #namespace
 
     updateTargetNetwork: 10000
     learnStart: 0
-    network_inputs: 206
-    network_outputs: 10
-    network_structure: [206,206,206]
+    network_inputs: 116
+    network_outputs: 5
+    network_structure: [116,116]
 
-    epsilon_decay: 0.997
+    epsilon_decay: 0.995
 
     # maximum velocity
     vel_max_x: 0.22

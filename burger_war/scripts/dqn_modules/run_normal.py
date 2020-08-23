@@ -123,10 +123,10 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
     def scan_env(self):
         env_list = []
 
-        # Lidar(181) -90 to 90 degree
+        # Lidar(91) -90 to 90 degree, slice size:2
         # scan = self.scan
-        first = np.array(self.scan[1:91])
-        last = np.array(self.scan[270:360])
+        first = np.array(self.scan[1:91:2])
+        last = np.array(self.scan[270:360:2])
 
         scan = []
         scan.extend(last)
@@ -291,21 +291,23 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
     def step(self, action):
         # move
-        ang_vel = ((action//2 - self.outputs//4) * self.vel_max_z) / (self.outputs//4)
+        # ang_vel = ((action//2 - self.outputs//4) * self.vel_max_z) / (self.outputs//4)
 
-        vel_cmd = Twist()
-        if (action % 2) == 0:
-            vel_cmd.linear.x = self.vel_max_x
-        else:
-            vel_cmd.linear.x = self.vel_min_x 
+        # vel_cmd = Twist()
+        # if (action % 2) == 0:
+        #     vel_cmd.linear.x = self.vel_max_x
+        # else:
+        #     vel_cmd.linear.x = self.vel_min_x 
+        # vel_cmd.angular.z = ang_vel
+        # self.vel_pub.publish(vel_cmd)
+
+        ang_vel = ((action - self.outputs//2) * self.vel_max_z) / (self.outputs//2)
+        vel_cmd.linear.x = self.vel_min_x 
         vel_cmd.angular.z = ang_vel
         self.vel_pub.publish(vel_cmd)
 
-        # wait 600ms
+        # wait 400ms
         if (rospy.get_rostime() - self.scan_time_prev) <= rospy.Duration(0.3):
-            # dummy read
-            self.wait_for_topic('/scan')
-        if (rospy.get_rostime() - self.scan_time_prev) <= rospy.Duration(0.5):
             # dummy read
             self.wait_for_topic('/scan')
 
