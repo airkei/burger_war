@@ -360,8 +360,8 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
                 self.prev_score_b = self.war_state_dict['scores_b']
 
                 # enemy reward
-                if is_near_enemy:
-                    if ((enemy_direction <= (PI * 1/2)) or (enemy_direction >= (PI * 3/2))):
+                if self.is_near_enemy:
+                    if ((self.enemy_direction <= (PI * 1/2)) or (self.enemy_direction >= (PI * 3/2))):
                         reward += 3
 
             except:
