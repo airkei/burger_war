@@ -365,6 +365,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
                         reward += 3
 
             except:
+                print('exception')
                 pass
 
         # check game end
