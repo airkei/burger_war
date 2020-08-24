@@ -338,8 +338,8 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
             reward += 30 * abs(vel_cmd.linear.x)
 
             # map reward
-            # if (-0.5 <= self.pose_x <= 0.5) and (-0.5 <= self.pose_y <= 0.5):
-            #     reward += 2
+            if (-0.5 <= self.pose_x <= 0.5) and (-0.5 <= self.pose_y <= 0.5):
+                reward += 2
 
         if not self.collisionMode: # production mode
             try:
@@ -361,7 +361,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
                 # enemy reward
                 if is_near_enemy:
-                    if ((enemy_direction <= (PI * 1/4)) or (enemy_direction >= (PI * 7/4))):
+                    if ((enemy_direction <= (PI * 1/2)) or (enemy_direction >= (PI * 3/2))):
                         reward += 3
 
             except:
