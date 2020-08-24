@@ -361,7 +361,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
 
                 # enemy reward
                 if self.is_near_enemy:
-                    if ((self.enemy_direction <= (PI * 1/2)) or (self.enemy_direction >= (PI * 3/2))):
+                    if ((self.enemy_direction <= (PI * 1/4)) or (self.enemy_direction >= (PI * 7/4))):
                         reward += 3
 
             except:
