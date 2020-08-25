@@ -18,7 +18,7 @@ if __name__ == '__main__':
     # training = train.Train(side=side, runMode='test',  collisionMode=True) # For test
 
     # For Production
-    training = train.Train(side=side, runMode='train', collisionMode=False) # For training
-    # training = train.Train(side=side, runMode='test',  collisionMode=False) # For test
+    # training = train.Train(side=side, runMode='train', collisionMode=False) # For training
+    training = train.Train(side=side, runMode='test',  collisionMode=False) # For test
 
     training.start()
