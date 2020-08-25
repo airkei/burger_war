@@ -378,7 +378,7 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
             done = True
 
             # emergency recovery
-            if self.runMode == 'test':
+            if self.runMode == 'test':            
                 for _ in range(12):
                     vel_cmd.linear.x = -self.vel_max_x
                     vel_cmd.angular.z = 0

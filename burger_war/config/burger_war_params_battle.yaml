@@ -1,6 +1,5 @@
-
-burger_battle: #namespace
-    task_and_robot_environment_name: 'BurgerWarWorldBattle-v0'
+burger: #namespace
+    task_and_robot_environment_name: 'BurgerWarWorld-v0'
 
     #dqn parameters
     resume_epoch: "0"

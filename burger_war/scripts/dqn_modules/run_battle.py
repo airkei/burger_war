@@ -300,17 +300,16 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
         self.war_state_enemy_b_prev = self.war_state_enemy_b
 
         # check game end
+        done = self.is_game_timeout() or self.is_game_called()
 
-        done = self.is_game_timeout()
         critical = len(points) > 0 and ((min(points) <= 45) or (max(points) >= 315))
-#        if (self.collision_cnt >= 6) or critical):
-        if collision:
+        if ((self.collision_cnt >= 6) or critical):
             self.collision_cnt = 0
             reward -= 100
             done = True
 
             # emergency recovery
-            if self.runMode == 'test':
+            if self.runMode == 'test':            
                 for _ in range(12):
                     vel_cmd.linear.x = -self.vel_max_x
                     vel_cmd.angular.z = 0
@@ -318,9 +317,6 @@ class BottiNodeEnv(gazebo_env.GazeboEnv):
                     data = self.wait_for_topic('/scan')
                     self.scan = data.ranges
                 state = self.scan_env()
-
-        if ((self.war_state_enemy_r == 'r') and (self.war_state_enemy_l == 'r') and (self.war_state_enemy_b == 'r')):
-            done = True
 
         rospy.loginfo('action:' + str(action) + ', reward:' + str(reward))
 
