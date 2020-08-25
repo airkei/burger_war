@@ -7,10 +7,6 @@ import rospy
 import dqn_modules
 from dqn_modules import train
 
-# import qlearn_modules
-# from qlearn_modules import train
-
-
 if __name__ == '__main__':
     side = sys.argv[1]
     print('side = ' + side)
@@ -24,9 +20,5 @@ if __name__ == '__main__':
     # For Production
     training = train.Train(side=side, runMode='train', collisionMode=False) # For training
     # training = train.Train(side=side, runMode='test',  collisionMode=False) # For test
-
-    # For Battle
-    # training = train.Train(side=side, runMode='train', battleMode=True) # For training
-    # training = train.Train(side=side, runMode='test',  battleMode=True) # For test
 
     training.start()
