@@ -62,11 +62,12 @@
 
     <!-- *** CONFIGURATION *** -->
     <rosparam command="load" file="$(find burger_war)/config/burger_war_params.yaml"/>
+    <rosparam command="load" file="$(find burger_war)/config/burger_war_params_battle.yaml"/>
     <!-- <rosparam command="load" file="$(find burger_war)/config/burger_war_q_params.yaml"/> -->
 
     <!-- *** MODEL *** -->
     <!-- botti -->
-    <node pkg="burger_war" type="teamBotti.py" name="teamBotti" output="screen"/>
+    <node pkg="burger_war" type="teamBotti.py" name="teamBotti" args="$(arg side)" output="screen"/>
 
     <!-- rviz -->
     <group if="$(arg open_rviz)">
