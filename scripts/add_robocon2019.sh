@@ -40,6 +40,3 @@ pip install numpy==1.16.6 \
                 tensorflow-gpu==1.14.0 \
                 keras==2.3.0 \
                 flatten_json==0.1.7
-
-echo "# ros-kinetic-opencv-apps for circle detection"
-sudo apt-get install -y ros-kinetic-opencv-apps
