@@ -17,7 +17,7 @@ burger: #namespace
     learnStart: 0
     network_inputs: 110
     network_outputs: 5
-    network_structure: [110,110]
+    network_structure: [110,110,110]
 
     epsilon_decay: 0.9965
 

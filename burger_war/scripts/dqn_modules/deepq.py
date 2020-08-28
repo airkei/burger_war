@@ -53,7 +53,7 @@ class DeepQ:
             model.add(Dense(hiddenLayers[0], input_shape=(self.input_size,), kernel_initializer='lecun_uniform', trainable=False))
             model.add(Activation(activationType, trainable=False))
 
-            for index in range(1, len(hiddenLayers)+1):
+            for index in range(1, len(hiddenLayers)):
                 layerSize = hiddenLayers[index]
                 model.add(Dense(layerSize, kernel_initializer='lecun_uniform', trainable=False))
                 model.add(Activation(activationType, trainable=False))
