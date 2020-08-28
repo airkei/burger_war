@@ -67,7 +67,7 @@ class DeepQ:
 
         return model
 
-    def addModel(self):
+    def addModel(self, learningRate):
         self.model.add(Dense(self.output_size, kernel_initializer='lecun_uniform'))
         self.model.add(Activation("linear"))
 

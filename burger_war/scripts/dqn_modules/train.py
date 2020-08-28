@@ -109,7 +109,7 @@ class Train:
 
             deepQ.loadWeights(weights_path)
 
-            deepQ.addModel()
+            deepQ.addModel(learningRate)
 
             if not os.path.exists(outdir):
                 os.makedirs(outdir)
