@@ -58,8 +58,15 @@ class DeepQ:
                 model.add(Dense(layerSize, kernel_initializer='lecun_uniform'))
                 model.add(Activation(activationType))
 
+                if index < (len(hiddenLayers)-1):
+                    model.layers[index].trainable = False
+
             model.add(Dense(self.output_size, kernel_initializer='lecun_uniform'))
             model.add(Activation("linear"))
+
+        for l in model.layers:
+            print(l.name, l.trainable)
+
         optimizer = optimizers.RMSprop(lr=learningRate, rho=0.9, epsilon=1e-06)
         model.compile(loss="mse", optimizer=optimizer)
         model.summary()
