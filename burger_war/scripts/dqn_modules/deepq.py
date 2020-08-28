@@ -48,24 +48,21 @@ class DeepQ:
         model = Sequential()
         if len(hiddenLayers) == 0:
             model.add(Dense(self.output_size, input_shape=(self.input_size,), kernel_initializer='lecun_uniform', trainable=False))
-            model.add(Activation("linear", trainable=False))
+            model.add(Activation("linear"), trainable=False)
         else :
             model.add(Dense(hiddenLayers[0], input_shape=(self.input_size,), kernel_initializer='lecun_uniform', trainable=False))
-            model.add(Activation(activationType, trainable=False))
+            model.add(Activation(activationType), trainable=False)
 
             for index in range(1, len(hiddenLayers)):
                 layerSize = hiddenLayers[index]
-                model.add(Dense(layerSize, kernel_initializer='lecun_uniform', trainable=False))
-                model.add(Activation(activationType, trainable=False))
-
-            model.add(Dense(110, kernel_initializer='lecun_uniform'))
-            model.add(Activation("linear"))
+                model.add(Dense(layerSize, kernel_initializer='lecun_uniform'), trainable=False)
+                model.add(Activation(activationType), trainable=False)
 
             model.add(Dense(self.output_size, kernel_initializer='lecun_uniform'))
             model.add(Activation("linear"))
 
-        for l in model.layers:
-            print(l.name, l.trainable)
+            model.add(Dense(self.output_size, kernel_initializer='lecun_uniform'))
+            model.add(Activation("linear"))
 
         optimizer = optimizers.RMSprop(lr=learningRate, rho=0.9, epsilon=1e-06)
         model.compile(loss="mse", optimizer=optimizer)
