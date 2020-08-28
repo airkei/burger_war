@@ -12,11 +12,10 @@ import rospy
 import deepq
 
 class Train:
-    def __init__(self, side='r', runMode='test', collisionMode=False, battleMode=False):
+    def __init__(self, side='r', runMode='test', collisionMode=False):
         self.side = side
         self.runMode = runMode
         self.collisionMode = collisionMode
-        self.battleMode = battleMode
 
     def detect_monitor_files(self, training_dir):
         return [os.path.join(training_dir, f) for f in os.listdir(training_dir) if f.startswith('openaigym')]
@@ -30,10 +29,7 @@ class Train:
             os.unlink(file)
 
     def start(self):
-        if self.battleMode:
-            ns = '/burger_battle/'
-        else:
-            ns = '/burger/'
+        ns = '/burger/'
 
         task_and_robot_environment_name = rospy.get_param(ns + "task_and_robot_environment_name")
         env = gym.make(task_and_robot_environment_name)
