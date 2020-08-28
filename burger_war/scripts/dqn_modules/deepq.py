@@ -47,11 +47,11 @@ class DeepQ:
     def createModel(self, inputs, outputs, hiddenLayers, activationType, learningRate):
         model = Sequential()
         if len(hiddenLayers) == 0:
-            model.add(Dense(self.output_size, input_shape=(self.input_size,), kernel_initializer='lecun_uniform'))
-            model.add(Activation("linear"))
+            model.add(Dense(self.output_size, input_shape=(self.input_size,), kernel_initializer='lecun_uniform', trainable=False))
+            model.add(Activation("linear", trainable=False))
         else :
-            model.add(Dense(hiddenLayers[0], input_shape=(self.input_size,), kernel_initializer='lecun_uniform'))
-            model.add(Activation(activationType))
+            model.add(Dense(hiddenLayers[0], input_shape=(self.input_size,), kernel_initializer='lecun_uniform', trainable=False))
+            model.add(Activation(activationType, trainable=False))
 
             for index in range(1, len(hiddenLayers)):
                 layerSize = hiddenLayers[index]
