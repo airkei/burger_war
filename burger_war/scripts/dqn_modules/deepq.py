@@ -58,6 +58,9 @@ class DeepQ:
                 model.add(Dense(layerSize, kernel_initializer='lecun_uniform', trainable=False))
                 model.add(Activation(activationType, trainable=False))
 
+            model.add(Dense(110, kernel_initializer='lecun_uniform'))
+            model.add(Activation("linear"))
+
             model.add(Dense(self.output_size, kernel_initializer='lecun_uniform'))
             model.add(Activation("linear"))
 
