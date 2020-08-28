@@ -75,6 +75,14 @@ class DeepQ:
         self.model.compile(loss="mse", optimizer=optimizer)
         self.model.summary()
 
+    def addTargetModel(self, learningRate):
+        self.targetModel.add(Dense(self.output_size, kernel_initializer='lecun_uniform'))
+        self.targetModel.add(Activation("linear"))
+
+        optimizer = optimizers.RMSprop(lr=learningRate, rho=0.9, epsilon=1e-06)
+        self.targetModel.compile(loss="mse", optimizer=optimizer)
+        self.targetModel.summary()
+
     def printNetwork(self):
         i = 0
         for layer in self.model.layers:
