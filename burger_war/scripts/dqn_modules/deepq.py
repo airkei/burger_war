@@ -75,8 +75,6 @@ class DeepQ:
         self.model.compile(loss="mse", optimizer=optimizer)
         self.model.summary()
 
-        return model
-
     def printNetwork(self):
         i = 0
         for layer in self.model.layers:
