@@ -58,15 +58,22 @@ class DeepQ:
                 model.add(Dense(layerSize, kernel_initializer='lecun_uniform', trainable=False))
                 model.add(Activation(activationType, trainable=False))
 
-            model.add(Dense(hiddenLayers[len(hiddenLayers)-1], kernel_initializer='lecun_uniform'))
-            model.add(Activation("linear"))
-
             model.add(Dense(self.output_size, kernel_initializer='lecun_uniform'))
             model.add(Activation("linear"))
 
         optimizer = optimizers.RMSprop(lr=learningRate, rho=0.9, epsilon=1e-06)
         model.compile(loss="mse", optimizer=optimizer)
         model.summary()
+
+        return model
+
+    def addModel(self):
+        self.model.add(Dense(self.output_size, kernel_initializer='lecun_uniform'))
+        self.model.add(Activation("linear"))
+
+        optimizer = optimizers.RMSprop(lr=learningRate, rho=0.9, epsilon=1e-06)
+        self.model.compile(loss="mse", optimizer=optimizer)
+        self.model.summary()
 
         return model
 
