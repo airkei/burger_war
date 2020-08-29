@@ -100,10 +100,7 @@ class CheeseBurger():
             # publish twist topic
             self.vel_pub.publish(twist)
 
-            try:
-                r.sleep()
-            except:
-                pass
+            r.sleep()
 
 
 if __name__ == '__main__':

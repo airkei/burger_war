@@ -314,10 +314,7 @@ class TeriyakiBurger():
             print("ENEMY TWIST: {}, {}".format(self.near_enemy_twist.linear.x, self.near_enemy_twist.angular.z))
             print("wall: {}, Enemy: {}, X: {}, Z: {}".format(self.is_near_wall, self.is_near_enemy, twist.linear.x, twist.angular.z))
 
-            try:
-                r.sleep()
-            except:
-                pass
+            r.sleep()
 
 
 if __name__ == '__main__':
