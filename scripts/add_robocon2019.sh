@@ -11,7 +11,7 @@ echo "model path add .bashrc"
 echo "export GAZEBO_MODEL_PATH=$HOME/catkin_ws/src/burger_war/burger_war/models/" >> ~/.bashrc
 source ~/.bashrc
 
-echo "# pip のインストール"
+echo "# pip のインストール" 
 sudo apt-get install -y python-pip
 
 echo "#　requests flask のインストール"
